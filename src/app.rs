@@ -14,3 +14,16 @@ impl<'a> Login<'a> {
         Err("Invalid username or password xD")
     }
 }
+
+
+pub struct Logins<'a> {
+    pub logins: Vec<Login<'a>>,
+}
+
+impl<'a> Logins<'a> {
+    pub fn new() -> Self {
+        Logins { logins: Vec::<Login<'a>>::new() }
+    
+        // deserialize logins later.
+    }
+}

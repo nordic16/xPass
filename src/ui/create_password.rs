@@ -1,6 +1,8 @@
 use cursive::traits::Nameable;
 use cursive::{Cursive};
-use cursive::views::{Dialog, EditView, TextView, ListView};
+use cursive::views::{Dialog, EditView, TextView, ListView, TextContent, ViewRef};
+
+use crate::app::Login;
 
 use super::Window;
 
@@ -13,8 +15,8 @@ impl Window for CreatePasswordWindow {
             .title("Create a new login")
 
             .content(ListView::new()
-            .child("Username: ", EditView::new().with_name("username"))
-            .child("password: ", EditView::new().with_name("Password"))
+                .child("Username: ", EditView::new().with_name("username"))
+                .child("Password: ", EditView::new().secret().with_name("password"))
         )
 
             .button("Cancel", |x| {
@@ -22,6 +24,11 @@ impl Window for CreatePasswordWindow {
             })
             .button("Create login", |x| {
                 //... create password
+                let username: ViewRef<EditView> = x.find_name("username").unwrap();
+                let password: ViewRef<EditView> = x.find_name("password").unwrap();
+
+                CreatePasswordWindow::create_password(username.get_content().as_str(), 
+                password.get_content().as_str());
             });
 
 
@@ -31,7 +38,8 @@ impl Window for CreatePasswordWindow {
 
 
 impl CreatePasswordWindow {
-    fn create_password() {
-        // do something
+    fn create_password(username: &str, password: &str) {
+        let login = Login::new(username, password).unwrap();
+        
     }
 }
