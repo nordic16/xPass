@@ -3,4 +3,4 @@
 ## Is it usable?
 Nah, still in development.
 
-**Note: my code, sucks!**
+**Note: my code sucks!**
