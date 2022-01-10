@@ -1,12 +1,8 @@
 use cursive::traits::Nameable;
 use cursive::{Cursive};
-use cursive::views::{Dialog, EditView, TextView, ListView, TextContent, ViewRef};
-
-use crate::app::Login;
+use cursive::views::{Dialog, EditView, TextView, ListView, ViewRef};
 
 use super::Window;
-
-// This window is just a dialog, really xD
 pub struct CreatePasswordWindow;
 
 impl Window for CreatePasswordWindow {
@@ -38,8 +34,6 @@ impl Window for CreatePasswordWindow {
 
 
 impl CreatePasswordWindow {
-    fn create_password(username: &str, password: &str) {
-        let login = Login::new(username, password).unwrap();
-        
+    fn create_password(username: &str, password: &str) {        
     }
 }

@@ -1,5 +1,6 @@
 use cursive::direction::Orientation;
 use cursive::event::Key;
+use cursive::traits::Nameable;
 use cursive::{Cursive, CursiveExt};
 use cursive::views::{TextView, Button, Dialog, LinearLayout};
 
@@ -32,11 +33,15 @@ impl Window for MainWindow {
         view.add_child(b_createpasswd);   
         view.add_child(b_clearpasswd);   
     
-        cursive.add_layer(view);
+
+        cursive.add_layer(view.with_name("main"));
     
         cursive.add_global_callback('q', |s| s.quit());
-        cursive.add_global_callback(Key::Esc, |s| { 
-             s.pop_layer();
+        cursive.add_global_callback(Key::Esc, |s| {  
+            // Prevents the user from being able to close the main view (lol).
+            if s.screen_mut().len() > 1 {
+                s.pop_layer();
+            }
          });
     
         cursive.run();

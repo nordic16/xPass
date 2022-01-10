@@ -1,14 +1,12 @@
 mod ui;
-mod app;
 
-use app::Logins;
 use cursive::{Cursive, theme::{Color, Theme}};
 use ui::{main_screen::MainWindow, Window};
 use cursive::theme::PaletteColor::{Background, Shadow, View, Primary};
 
+//TODO: Use set_user_data() to store passwords (LESSSGO).
 
 fn main() {
-    let logins = Logins::new();
 
     let mut cursive = Cursive::default();
     let mut theme = Theme::default();
