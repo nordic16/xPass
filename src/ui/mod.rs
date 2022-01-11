@@ -1,4 +1,4 @@
-use cursive::{Cursive};
+use cursive::Cursive;
 
 pub mod main_screen;
 pub mod create_password;

@@ -1,22 +1,25 @@
 mod ui;
+mod utils;
+mod login;
+mod app;
 
-use cursive::{Cursive, theme::{Color, Theme}};
-use ui::{main_screen::MainWindow, Window};
-use cursive::theme::PaletteColor::{Background, Shadow, View, Primary};
+use app::App;
+use ui::main_screen::MainScreen;
 
-//TODO: Use set_user_data() to store passwords (LESSSGO).
+use crate::login::Login;
 
 fn main() {
 
-    let mut cursive = Cursive::default();
-    let mut theme = Theme::default();
-        
-    theme.palette[Background] = Color::TerminalDefault;
-    theme.palette[Shadow] = Color::TerminalDefault;
-    theme.palette[View] = Color::TerminalDefault;
-    theme.palette[Primary] = Color::TerminalDefault;
+    let logins = utils::retrieve_from_datafile();
+    let mut app = App::new(&logins);
     
-    cursive.set_theme(theme);
+    app.cursive.set_user_data(app.logins);
+    MainScreen::start_event_loop(&mut app.cursive);
 
-    MainWindow::draw_window(&mut cursive);
+    // Retrieves all login entries after the user decides to close the app.
+    let logins = app.cursive.user_data::<Vec<Login>>().unwrap();
+    println!("{:?}", logins);
+
+    utils::write_to_datafile(logins).expect("failed to write to datafile.");
+
 }
