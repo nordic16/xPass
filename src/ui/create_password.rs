@@ -1,15 +1,14 @@
 use cursive::Cursive;
 use cursive::traits::Nameable;
-use cursive::views::{Dialog, EditView, TextView, ListView, ViewRef};
-
+use cursive::views::{Dialog, EditView, ListView, ViewRef};
 use crate::login::Login;
 
-use super::Window;
-pub struct CreatePasswordWindow;
+use super::{Window, login_info::LoginInfoScreen};
+pub struct CreatePasswordScreen;
 
-impl Window for CreatePasswordWindow {
-    fn draw_window(cursive: &mut Cursive) {
-        let view = Dialog::around(TextView::new("username: "))
+impl Window for CreatePasswordScreen {
+    fn draw_window(&self, cursive: &mut Cursive) {
+        let view = Dialog::new()
             .title("Create a new login")
 
             .content(ListView::new()
@@ -26,20 +25,29 @@ impl Window for CreatePasswordWindow {
                 let username: ViewRef<EditView> = x.find_name("username").unwrap();
                 let password: ViewRef<EditView> = x.find_name("password").unwrap();
 
-                CreatePasswordWindow::create_password(username.get_content().as_str(), 
+                let login = CreatePasswordScreen::create_password(username.get_content().as_str(), 
                 password.get_content().as_str(), x);
+                
+                x.pop_layer();
+                LoginInfoScreen::new(&login).draw_window(x);
             });
 
 
         cursive.add_layer(view);
     }
+
+    fn new() -> Self {
+        CreatePasswordScreen {}
+    }
 }
 
 
-impl CreatePasswordWindow {
-    fn create_password(username: &str, password: &str, cursive: &mut Cursive) {
+impl CreatePasswordScreen {
+    fn create_password(username: &str, password: &str, cursive: &mut Cursive) -> Login {
         let login = Login::new(username, password);
 
-        cursive.with_user_data(|logins: &mut Vec<Login>| logins.push(login));
+        cursive.with_user_data(|logins: &mut Vec<Login>| logins.push(login.to_owned()));
+
+        return login;
     }
 }

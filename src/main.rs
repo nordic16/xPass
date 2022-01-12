@@ -8,7 +8,6 @@ use app::App;
 use crate::login::Login;
 
 fn main() {
-
     let logins = utils::retrieve_from_datafile();
     let mut app = App::new();
     
@@ -17,8 +16,6 @@ fn main() {
 
     // Retrieves all login entries after the user decides to close the app.
     let logins = app.cursive.user_data::<Vec<Login>>().unwrap();
-    println!("{:?}", logins);
 
     utils::write_to_datafile(logins).expect("failed to write to datafile.");
-
 }

@@ -6,8 +6,9 @@ use cursive::views::{Button, LinearLayout, Dialog, TextView};
 use cursive::{Cursive, theme::Theme};
 use cursive::theme::PaletteColor::{Background, Shadow, View, Primary};
 
+use crate::login::Login;
 use crate::ui::Window;
-use crate::ui::create_password::CreatePasswordWindow; 
+use crate::ui::create_password::CreatePasswordScreen; 
 
 pub struct App {
     pub cursive: Cursive,
@@ -29,6 +30,8 @@ impl App {
         App { cursive }
     }
 
+
+    /// Starts event loop and draws the main screen.
     pub fn start_event_loop(&mut self) {        
     
         let b_listpasswd = Button::new("List passwords", |q| {
@@ -36,12 +39,22 @@ impl App {
                 q.add_layer(dialog);
         });
     
-        let b_createpasswd = Button::new("Create new password", |x: &mut Cursive| CreatePasswordWindow::draw_window(x));
+        let b_createpasswd = Button::new("Create new password", |x: &mut Cursive| {
+            CreatePasswordScreen::new().draw_window(x)
+        });
 
     
          let b_clearpasswd = Button::new("Clear passwords", |q| {
-            let dialog = retrieve_future_dialog();
-                 q.add_layer(dialog);
+            q.with_user_data(|logins: &mut Vec<Login>| logins.clear());
+
+            let dialog = Dialog::new()
+                .title("Success!")
+                .content(TextView::new("Passwords cleared."))
+                .button("Ok", |x| {
+                    x.pop_layer();
+                });
+
+            q.add_layer(dialog);
          });
     
         let mut view = LinearLayout::new(Orientation::Vertical);
@@ -65,6 +78,8 @@ impl App {
     }
 }
 
+
+/// TODO: Delete this later.
 fn retrieve_future_dialog() -> Dialog {
     Dialog::new()
              .title("Future")
