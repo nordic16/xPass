@@ -4,17 +4,16 @@ mod login;
 mod app;
 
 use app::App;
-use ui::main_screen::MainScreen;
 
 use crate::login::Login;
 
 fn main() {
 
     let logins = utils::retrieve_from_datafile();
-    let mut app = App::new(&logins);
+    let mut app = App::new();
     
-    app.cursive.set_user_data(app.logins);
-    MainScreen::start_event_loop(&mut app.cursive);
+    app.cursive.set_user_data(logins);
+    app.start_event_loop();
 
     // Retrieves all login entries after the user decides to close the app.
     let logins = app.cursive.user_data::<Vec<Login>>().unwrap();
