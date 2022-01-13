@@ -32,37 +32,29 @@ impl App {
 
 
     /// Starts event loop and draws the main screen.
-    pub fn start_event_loop(&mut self) {        
-    
-        let b_listpasswd = Button::new("List passwords", |q| {
-           let dialog = retrieve_future_dialog();
+    pub fn start_event_loop(&mut self) {            
+        let view = LinearLayout::new(Orientation::Vertical)
+            .child( Button::new("List passwords", |q| {
+                let dialog = retrieve_future_dialog();
+                    q.add_layer(dialog);
+            }))
+         
+            .child(Button::new("Clear passwords", |q| {
+                q.with_user_data(|logins: &mut Vec<Login>| logins.clear());
+
+                let dialog = Dialog::new()
+                    .title("Success!")
+                    .content(TextView::new("Passwords cleared."))
+                    .button("Ok", |x| {
+                        x.pop_layer();
+                    });
                 q.add_layer(dialog);
-        });
-    
-        let b_createpasswd = Button::new("Create new password", |x: &mut Cursive| {
-            CreatePasswordScreen::new().draw_window(x)
-        });
+            }))
 
-    
-         let b_clearpasswd = Button::new("Clear passwords", |q| {
-            q.with_user_data(|logins: &mut Vec<Login>| logins.clear());
+            .child(Button::new("Create new password", |x: &mut Cursive| {
+                CreatePasswordScreen::new().draw_window(x);
+        }));
 
-            let dialog = Dialog::new()
-                .title("Success!")
-                .content(TextView::new("Passwords cleared."))
-                .button("Ok", |x| {
-                    x.pop_layer();
-                });
-
-            q.add_layer(dialog);
-         });
-    
-        let mut view = LinearLayout::new(Orientation::Vertical);
-        
-        view.add_child(b_listpasswd);   
-        view.add_child(b_createpasswd);   
-        view.add_child(b_clearpasswd);   
-    
 
         self.cursive.add_layer(view);
     
