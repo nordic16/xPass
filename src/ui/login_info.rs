@@ -2,13 +2,13 @@ use cursive::views::{Dialog, ListView, TextView};
 
 use crate::utils::login::Login;
 
-use super::Window;
+use super::Screen;
 
 pub struct LoginInfoScreen {
     pub login: Login
 }
 
-impl Window for LoginInfoScreen {
+impl Screen for LoginInfoScreen {
     fn draw_window(&self, cursive: &mut cursive::Cursive) {
         let view = Dialog::new()
             .title("Login created!")

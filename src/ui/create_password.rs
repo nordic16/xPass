@@ -4,10 +4,10 @@ use cursive::views::{Dialog, EditView, ListView, ViewRef};
 use crate::utils::login::Login;
 use crate::utils::user_config::UserConfig;
 
-use super::{Window, login_info::LoginInfoScreen};
+use super::{Screen, login_info::LoginInfoScreen};
 pub struct CreatePasswordScreen;
 
-impl Window for CreatePasswordScreen {
+impl Screen for CreatePasswordScreen {
     fn draw_window(&self, cursive: &mut Cursive) {
         let view = Dialog::new()
             .title("Create a new login")

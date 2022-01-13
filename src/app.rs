@@ -5,10 +5,8 @@ use cursive::theme::Color;
 use cursive::views::{Button, LinearLayout, Dialog, TextView};
 use cursive::{Cursive, theme::Theme};
 use cursive::theme::PaletteColor::{Background, Shadow, View, Primary};
-
-use crate::utils::login::Login;
-use crate::ui::Window;
-use crate::ui::create_password::CreatePasswordScreen;
+use crate::ui::Screen;
+use crate::ui::{create_password::CreatePasswordScreen, settings::SettingsScreen};
 use crate::utils::user_config::UserConfig; 
 
 pub struct App {
@@ -35,9 +33,17 @@ impl App {
     /// Starts event loop and draws the main screen.
     pub fn start_event_loop(&mut self) {            
         let view = LinearLayout::new(Orientation::Vertical)
+            .child(Button::new("Create new password", |x| {
+                CreatePasswordScreen::new().draw_window(x);
+            }))
+
             .child( Button::new("List passwords", |q| {
                 let dialog = retrieve_future_dialog();
-                    q.add_layer(dialog);
+                q.add_layer(dialog);
+            }))
+
+            .child(Button::new("Settings", |q| {
+                SettingsScreen::new().draw_window(q);
             }))
          
             .child(Button::new("Clear passwords", |q| {
@@ -50,11 +56,8 @@ impl App {
                         x.pop_layer();
                     });
                 q.add_layer(dialog);
-            }))
+            }));
 
-            .child(Button::new("Create new password", |x: &mut Cursive| {
-                CreatePasswordScreen::new().draw_window(x);
-        }));
 
 
         self.cursive.add_layer(view);

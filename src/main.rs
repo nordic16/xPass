@@ -6,7 +6,6 @@ use app::App;
 use confy;
 use utils::user_config::UserConfig;
 
-//use crate::utils::{login::Login, user_config};
 
 fn main()  {
     let cfg: UserConfig = confy::load("config").expect("bruh!!!");
