@@ -1,6 +1,6 @@
 use cursive::views::{Dialog, ListView, TextView};
 
-use crate::login::Login;
+use crate::utils::login::Login;
 
 use super::Window;
 

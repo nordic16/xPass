@@ -6,9 +6,10 @@ use cursive::views::{Button, LinearLayout, Dialog, TextView};
 use cursive::{Cursive, theme::Theme};
 use cursive::theme::PaletteColor::{Background, Shadow, View, Primary};
 
-use crate::login::Login;
+use crate::utils::login::Login;
 use crate::ui::Window;
-use crate::ui::create_password::CreatePasswordScreen; 
+use crate::ui::create_password::CreatePasswordScreen;
+use crate::utils::user_config::UserConfig; 
 
 pub struct App {
     pub cursive: Cursive,
@@ -40,7 +41,7 @@ impl App {
             }))
          
             .child(Button::new("Clear passwords", |q| {
-                q.with_user_data(|logins: &mut Vec<Login>| logins.clear());
+                q.with_user_data(|cfg: &mut UserConfig| cfg.logins.clear());
 
                 let dialog = Dialog::new()
                     .title("Success!")

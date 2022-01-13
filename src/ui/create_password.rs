@@ -1,7 +1,8 @@
 use cursive::Cursive;
 use cursive::traits::Nameable;
 use cursive::views::{Dialog, EditView, ListView, ViewRef};
-use crate::login::Login;
+use crate::utils::login::Login;
+use crate::utils::user_config::UserConfig;
 
 use super::{Window, login_info::LoginInfoScreen};
 pub struct CreatePasswordScreen;
@@ -46,7 +47,7 @@ impl CreatePasswordScreen {
     fn create_password(username: &str, password: &str, cursive: &mut Cursive) -> Login {
         let login = Login::new(username, password);
 
-        cursive.with_user_data(|logins: &mut Vec<Login>| logins.push(login.to_owned()));
+        cursive.with_user_data(|cfg: &mut UserConfig| cfg.logins.push(login.to_owned()));
 
         return login;
     }
