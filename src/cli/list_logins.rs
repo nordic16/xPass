@@ -1,4 +1,4 @@
-use cursive::{views::{Panel, Button, PaddedView, LinearLayout, ScrollView}, view::Margins, traits::{Resizable, Nameable}};
+use cursive::{views::{Panel, Button, PaddedView, LinearLayout, ScrollView, TextView}, view::Margins, traits::{Resizable, Nameable}};
 use crate::utils::user_config::UserConfig;
 use super::{Screen, login_info::LoginInfoScreen};
 
@@ -21,12 +21,18 @@ impl Screen for ListLoginsScreen {
 
         // This code sucks.
         cursive.call_on_name("logins", move |q: &mut LinearLayout| {
-            for i in logins.iter() {
-                let login = i.clone(); // temporary fix xD
+            if logins.len() > 0 {
+                for i in logins.iter() {
+                    let login = i.clone(); // temporary fix xD
 
-                q.add_child(Button::new_raw(&i.name, move |q| {
-                    LoginInfoScreen::draw_window(q, &login);
-                }));
+                    q.add_child(Button::new_raw(&i.name, move |q| {
+                        LoginInfoScreen::draw_window(q, &login);
+                    }));
+                }
+            
+            } else {
+                q.add_child(TextView::new("No logins!\nAdd some, and they will be listed here!")
+                    .h_align(cursive::align::HAlign::Center));
             }
         });
 
