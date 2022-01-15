@@ -1,4 +1,4 @@
-use cursive::{views::{Panel, Button, PaddedView, LinearLayout}, view::Margins, traits::{Resizable, Nameable}};
+use cursive::{views::{Panel, Button, PaddedView, LinearLayout, ScrollView}, view::Margins, traits::{Resizable, Nameable}};
 use crate::utils::user_config::UserConfig;
 use super::{Screen, login_info::LoginInfoScreen};
 
@@ -12,8 +12,8 @@ impl Screen for ListLoginsScreen {
         let logins = cfg.logins.clone(); // Temporary fix.
         
         let view = Panel::new(PaddedView::new(Margins {left: 0, top: 1, right: 0, bottom: 2},
-        LinearLayout::new(cursive::direction::Orientation::Vertical)
-                .with_name("logins"))
+        ScrollView::new(LinearLayout::new(cursive::direction::Orientation::Vertical)
+                .with_name("logins")))
         ).title("Logins").min_size((22,0));
 
         cursive.add_layer(view);
