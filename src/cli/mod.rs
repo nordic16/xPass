@@ -5,6 +5,5 @@ pub mod login_info;
 pub mod list_logins;
 
 pub trait Screen {
-    fn draw_window(&self, cursive: &mut Cursive);
-    fn new() -> Self;
+    fn draw_window(_cursive: &mut Cursive) {}
 }

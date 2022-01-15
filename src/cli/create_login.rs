@@ -4,15 +4,16 @@ use cursive::views::{Dialog, EditView, ListView, ViewRef};
 use crate::utils::login::Login;
 use crate::utils::user_config::UserConfig;
 
-use super::{Screen, login_info::LoginInfoScreen};
+use super::Screen;
 pub struct CreateLoginScreen;
 
 impl Screen for CreateLoginScreen {
-    fn draw_window(&self, cursive: &mut Cursive) {
+    fn draw_window(cursive: &mut Cursive) {
         let view = Dialog::new()
             .title("Create a new login")
 
             .content(ListView::new()
+                .child("Name:", EditView::new().with_name("name"))
                 .child("Username: ", EditView::new().with_name("username"))
                 .child("Password: ", EditView::new().secret().with_name("password"))
             )
@@ -25,30 +26,25 @@ impl Screen for CreateLoginScreen {
                 //... create password
                 let username: ViewRef<EditView> = x.find_name("username").unwrap();
                 let password: ViewRef<EditView> = x.find_name("password").unwrap();
+                let name: ViewRef<EditView> = x.find_name("name").unwrap();
 
-                let login = CreateLoginScreen::create_password(username.get_content().as_str(), 
-                password.get_content().as_str(), x);
+
+                CreateLoginScreen::create_password(username.get_content().as_str(), 
+                password.get_content().as_str(), name.get_content().as_str(), x);
                 
                 x.pop_layer();
-                LoginInfoScreen::new(&login).draw_window(x);
             });
 
 
         cursive.add_layer(view);
     }
-
-    fn new() -> Self {
-        CreateLoginScreen {}
-    }
 }
 
 
 impl CreateLoginScreen {
-    fn create_password(username: &str, password: &str, cursive: &mut Cursive) -> Login {
-        let login = Login::new(username, password);
+    fn create_password(username: &str, password: &str, name: &str, cursive: &mut Cursive) {
+        let login = Login::new(username, password, name);
 
         cursive.with_user_data(|cfg: &mut UserConfig| cfg.logins.push(login.to_owned()));
-
-        return login;
     }
 }

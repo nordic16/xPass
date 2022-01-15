@@ -7,10 +7,11 @@ use super::{Screen, login_info::LoginInfoScreen};
 pub struct ListLoginsScreen;
 
 impl Screen for ListLoginsScreen {
-    fn draw_window(&self, cursive: &mut cursive::Cursive) {
+    fn draw_window(cursive: &mut cursive::Cursive) {
         let cfg = cursive.user_data::<UserConfig>().unwrap().to_owned();
         let logins = cfg.logins.clone(); // Temporary fix.
         
+        // If anyone is seeing this, please send help. I can't take this anymore.
         let view = Panel::new(PaddedView::new(Margins {left: 0, top: 1, right: 0, bottom: 2},
         ScrollView::new(LinearLayout::new(cursive::direction::Orientation::Vertical)
                 .with_name("logins")))
@@ -23,15 +24,11 @@ impl Screen for ListLoginsScreen {
             for i in logins.iter() {
                 let login = i.clone(); // temporary fix xD
 
-                q.add_child(Button::new_raw(&i.username, move |q| {
-                    LoginInfoScreen::new(&login).draw_window(q);
+                q.add_child(Button::new_raw(&i.name, move |q| {
+                    LoginInfoScreen::draw_window(q, &login);
                 }));
             }
         });
 
-    }
-
-    fn new() -> Self {
-        Self {}
     }
 }

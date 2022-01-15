@@ -5,7 +5,7 @@ use super::Screen;
 pub struct SettingsScreen;
 
 impl Screen for SettingsScreen {
-    fn draw_window(&self, cursive: &mut cursive::Cursive) {
+    fn draw_window(cursive: &mut cursive::Cursive) {
         let view = Dialog::new()
             .title("Settings")
             .content(
@@ -22,9 +22,5 @@ impl Screen for SettingsScreen {
                     
         cursive.add_layer(view);
 
-    }
-
-    fn new() -> Self {
-        SettingsScreen {}
     }
 }

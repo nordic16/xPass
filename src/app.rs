@@ -33,16 +33,16 @@ impl App {
     /// Starts event loop and draws the main screen.
     pub fn start_event_loop(&mut self) {            
         let view = Panel::new(LinearLayout::new(Orientation::Vertical)
-            .child(Button::new_raw("Create new password", |x| {
-                CreateLoginScreen::new().draw_window(x);
+            .child(Button::new_raw("Create new password", |q| {
+                CreateLoginScreen::draw_window(q);
             }))
 
             .child( Button::new_raw("List passwords", |q| {
-                ListLoginsScreen::new().draw_window(q);
+                ListLoginsScreen::draw_window(q);
             }))
 
             .child(Button::new_raw("Settings", |q| {
-                SettingsScreen::new().draw_window(q);
+                SettingsScreen::draw_window(q);
             }))
          
             .child(Button::new_raw("Clear passwords", |q| {
