@@ -5,9 +5,9 @@ use crate::utils::login::Login;
 use crate::utils::user_config::UserConfig;
 
 use super::{Screen, login_info::LoginInfoScreen};
-pub struct CreatePasswordScreen;
+pub struct CreateLoginScreen;
 
-impl Screen for CreatePasswordScreen {
+impl Screen for CreateLoginScreen {
     fn draw_window(&self, cursive: &mut Cursive) {
         let view = Dialog::new()
             .title("Create a new login")
@@ -26,7 +26,7 @@ impl Screen for CreatePasswordScreen {
                 let username: ViewRef<EditView> = x.find_name("username").unwrap();
                 let password: ViewRef<EditView> = x.find_name("password").unwrap();
 
-                let login = CreatePasswordScreen::create_password(username.get_content().as_str(), 
+                let login = CreateLoginScreen::create_password(username.get_content().as_str(), 
                 password.get_content().as_str(), x);
                 
                 x.pop_layer();
@@ -38,12 +38,12 @@ impl Screen for CreatePasswordScreen {
     }
 
     fn new() -> Self {
-        CreatePasswordScreen {}
+        CreateLoginScreen {}
     }
 }
 
 
-impl CreatePasswordScreen {
+impl CreateLoginScreen {
     fn create_password(username: &str, password: &str, cursive: &mut Cursive) -> Login {
         let login = Login::new(username, password);
 

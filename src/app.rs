@@ -2,11 +2,11 @@ use cursive::CursiveExt;
 use cursive::direction::Orientation;
 use cursive::event::Key;
 use cursive::theme::Color;
-use cursive::views::{Button, LinearLayout, Dialog, TextView};
+use cursive::views::{Button, LinearLayout, Dialog, TextView, Panel};
 use cursive::{Cursive, theme::Theme};
 use cursive::theme::PaletteColor::{Background, Shadow, View, Primary};
-use crate::ui::Screen;
-use crate::ui::{create_password::CreatePasswordScreen, settings::SettingsScreen};
+use crate::cli::Screen;
+use crate::cli::{create_login::CreateLoginScreen, settings::SettingsScreen, list_logins::ListLoginsScreen};
 use crate::utils::user_config::UserConfig; 
 
 pub struct App {
@@ -32,21 +32,20 @@ impl App {
 
     /// Starts event loop and draws the main screen.
     pub fn start_event_loop(&mut self) {            
-        let view = LinearLayout::new(Orientation::Vertical)
-            .child(Button::new("Create new password", |x| {
-                CreatePasswordScreen::new().draw_window(x);
+        let view = Panel::new(LinearLayout::new(Orientation::Vertical)
+            .child(Button::new_raw("Create new password", |x| {
+                CreateLoginScreen::new().draw_window(x);
             }))
 
-            .child( Button::new("List passwords", |q| {
-                let dialog = retrieve_future_dialog();
-                q.add_layer(dialog);
+            .child( Button::new_raw("List passwords", |q| {
+                ListLoginsScreen::new().draw_window(q);
             }))
 
-            .child(Button::new("Settings", |q| {
+            .child(Button::new_raw("Settings", |q| {
                 SettingsScreen::new().draw_window(q);
             }))
          
-            .child(Button::new("Clear passwords", |q| {
+            .child(Button::new_raw("Clear passwords", |q| {
                 q.with_user_data(|cfg: &mut UserConfig| cfg.logins.clear());
 
                 let dialog = Dialog::new()
@@ -56,9 +55,9 @@ impl App {
                         x.pop_layer();
                     });
                 q.add_layer(dialog);
-            }));
-
-
+            }))
+        )
+        .title("xPass");
 
         self.cursive.add_layer(view);
     
@@ -72,13 +71,4 @@ impl App {
     
         self.cursive.run();
     }
-}
-
-
-/// TODO: Delete this later.
-fn retrieve_future_dialog() -> Dialog {
-    Dialog::new()
-             .title("Future")
-             .content(
-                 TextView::new("Soon I will have a new apprentice...One far younger, and more powerful!"))
 }

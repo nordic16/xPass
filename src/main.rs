@@ -1,4 +1,4 @@
-mod ui;
+mod cli;
 mod utils;
 mod app;
 
