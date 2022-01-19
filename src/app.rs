@@ -9,14 +9,12 @@ use crate::cli::Screen;
 use crate::cli::{create_login::CreateLoginScreen, settings::SettingsScreen, list_logins::ListLoginsScreen};
 use crate::utils::user_config::UserConfig; 
 
-pub struct App {
-    pub cursive: Cursive,
+pub struct App<'a> {
+    pub cursive: &'a mut Cursive,
 }
 
-impl App {
-    pub fn new() -> Self {
-        let mut cursive = Cursive::default();
-
+impl<'a> App<'a> {
+    pub fn new(cursive: &'a mut Cursive) -> Self {
         let mut theme = Theme::default();
 
         theme.palette[Background] = Color::TerminalDefault;

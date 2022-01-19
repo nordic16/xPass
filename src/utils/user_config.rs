@@ -5,6 +5,7 @@ use super::login::Login;
 #[derive(Serialize, Deserialize, Clone)]
 pub struct UserConfig {
     pub(crate) e_key: u32,
+    
     pub(crate) logins: Vec<Login>,
 }
 

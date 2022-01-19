@@ -35,6 +35,5 @@ impl Screen for ListLoginsScreen {
                     .h_align(cursive::align::HAlign::Center));
             }
         });
-
     }
 }
