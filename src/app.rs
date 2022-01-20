@@ -9,12 +9,13 @@ use crate::cli::Screen;
 use crate::cli::{create_login::CreateLoginScreen, settings::SettingsScreen, list_logins::ListLoginsScreen};
 use crate::utils::user_config::UserConfig; 
 
-pub struct App<'a> {
-    pub cursive: &'a mut Cursive,
+pub struct App {
+    pub cursive: Cursive,
 }
 
-impl<'a> App<'a> {
-    pub fn new(cursive: &'a mut Cursive) -> Self {
+impl App {
+    pub fn new() -> Self {
+        let mut cursive = Cursive::default();
         let mut theme = Theme::default();
 
         theme.palette[Background] = Color::TerminalDefault;
@@ -29,18 +30,18 @@ impl<'a> App<'a> {
 
 
     /// Starts event loop and draws the main screen.
-    pub fn start_event_loop(&mut self) {            
+    pub fn start_event_loop(&mut self) {          
         let view = Panel::new(LinearLayout::new(Orientation::Vertical)
-            .child(Button::new_raw("Create new password", |q| {
-                CreateLoginScreen::draw_window(q);
+            .child(Button::new_raw("Create new password", |x| {
+                CreateLoginScreen::draw_window(x);
             }))
 
-            .child( Button::new_raw("List passwords", |q| {
-                ListLoginsScreen::draw_window(q);
+            .child( Button::new_raw("List passwords", |x| {
+                ListLoginsScreen::draw_window(x);
             }))
 
-            .child(Button::new_raw("Settings", |q| {
-                SettingsScreen::draw_window(q);
+            .child(Button::new_raw("Settings", |x| {
+                SettingsScreen::draw_window(x);
             }))
          
             .child(Button::new_raw("Clear passwords", |q| {

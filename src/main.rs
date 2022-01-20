@@ -4,15 +4,12 @@ mod app;
 
 use app::App;
 use confy;
-use cursive::Cursive;
 use utils::user_config::UserConfig;
 
 
 fn main()  {
     let cfg: UserConfig = confy::load("config").expect("bruh!!!");
-    let mut cursive = Cursive::default();
-
-    let mut app = App::new(&mut cursive);
+    let mut app = App::new();
 
     app.cursive.set_user_data(cfg);
     app.start_event_loop();

@@ -1,6 +1,6 @@
 use cursive::Cursive;
 use cursive::traits::Nameable;
-use cursive::views::{Dialog, EditView, ListView, ViewRef};
+use cursive::views::{Dialog, EditView, ListView, ViewRef, TextView};
 use crate::utils::login::Login;
 use crate::utils::user_config::UserConfig;
 
@@ -33,8 +33,11 @@ impl Screen for CreateLoginScreen {
                 password.get_content().as_str(), name.get_content().as_str(), x);
                 
                 x.pop_layer();
-            });
 
+                x.add_layer(Dialog::new()
+                    .title("Success!")
+                    .content(TextView::new("Entry created successfully.")));
+            });
 
         cursive.add_layer(view);
     }
