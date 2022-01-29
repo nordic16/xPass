@@ -728,7 +728,6 @@ dependencies = [
  "cursive",
  "magic-crypt",
  "serde",
- "toml",
 ]
 
 [[package]]
