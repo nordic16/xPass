@@ -2,11 +2,13 @@ use cursive::CursiveExt;
 use cursive::direction::Orientation;
 use cursive::event::Key;
 use cursive::theme::Color;
-use cursive::views::{Button, LinearLayout, Dialog, TextView, Panel};
+use cursive::traits::{Nameable, Resizable};
+use cursive::views::{Button, LinearLayout, Dialog, TextView, Panel, ListView, EditView, ViewRef};
 use cursive::{Cursive, theme::Theme};
 use cursive::theme::PaletteColor::{Background, Shadow, View, Primary};
 use crate::cli::Screen;
 use crate::cli::{create_login::CreateLoginScreen, list_logins::ListLoginsScreen};
+use crate::utils::construct_dialog;
 use crate::utils::user_config::UserConfig; 
 
 pub struct App {
@@ -29,8 +31,23 @@ impl App {
     }
 
 
-    /// Starts event loop and draws the main screen.
-    pub fn start_event_loop(&mut self) {    
+    /// Starts event loop and draws the main menu.
+    pub fn start_event_loop(&mut self) {        
+        let app_data = self.cursive.user_data::<UserConfig>().unwrap().clone(); 
+
+        // Unset password: Must set a new one.
+        if app_data.master_password == "" {
+            App::draw_auth_dialog(&mut self.cursive);
+
+        } else {
+            App::draw_main_menu(&mut self.cursive);
+        }
+
+        self.cursive.run();
+    }
+
+
+    fn draw_main_menu(cursive: &mut Cursive) {
         let view = Panel::new(LinearLayout::new(Orientation::Vertical)
             .child(Button::new_raw("Create new password", |x| {
                 CreateLoginScreen::draw_window(x);
@@ -42,28 +59,56 @@ impl App {
 
             .child(Button::new_raw("Clear passwords", |q| {
                 q.with_user_data(|cfg: &mut UserConfig| cfg.logins.clear());
-
-                let dialog = Dialog::new()
-                    .title("Success!")
-                    .content(TextView::new("Passwords cleared."))
-                    .button("Ok", |x| {
-                        x.pop_layer();
-                    });
-                q.add_layer(dialog);
+                Dialog::info("Passwords cleared!");
             }))
         )
         .title("xPass");
 
-        self.cursive.add_layer(view);
-    
-        self.cursive.add_global_callback('q', |s| s.quit());
-        self.cursive.add_global_callback(Key::Esc, |s| {  
-            // Prevents the user from being able to close the main view (lol).
-            if s.screen_mut().len() > 1 {
-                s.pop_layer();
+        // Global callbacks.
+        cursive.add_global_callback('q', |x| x.quit());
+        cursive.add_global_callback(Key::Esc, |x| {  
+            // Closes the app if there are no more views.
+            if x.screen().len() > 1 {
+                x.pop_layer();
             }
-         });
-    
-        self.cursive.run();
+
+        });
+
+        cursive.add_layer(view);
     }
+
+
+    /// Draws the screen that lets the user set the master password.
+    fn draw_auth_dialog(cursive: &mut Cursive) { 
+        let content = ListView::new()
+            .child("Password", EditView::new().with_name("password"))
+            .child("Confirm Password", EditView::new().with_name("confirm_password")
+        
+        ).min_width(35);
+
+        // Closure that will be executed when the user presses ok.
+        let action = |x : &mut Cursive | {
+            let password: ViewRef<EditView> = x.find_name("password").unwrap();
+            let c_password: ViewRef<EditView> = x.find_name("confirm_password").unwrap();
+    
+            if password.get_content() == c_password.get_content() && !password.get_content().is_empty() {
+                x.add_layer(construct_dialog("Success!", TextView::new("Password set!"), |cx| {
+                    cx.pop_layer();
+                    cx.pop_layer();
+
+                    App::draw_main_menu(cx);
+                }));
+
+                // Actually sets the password.
+                x.with_user_data(|cfg: &mut UserConfig| cfg.master_password = password.get_content().to_string());
+
+            // Invalid password.
+            } else {
+                x.add_layer(construct_dialog("Error.", TextView::new("Make sure your passwords match!"), |x| { x.pop_layer(); }));   
+            }
+        };
+        
+        cursive.add_layer(construct_dialog("Set a master password.", content, action));
+    }
+
 }

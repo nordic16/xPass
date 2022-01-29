@@ -1,7 +1,7 @@
 use cursive::Cursive;
 use cursive::traits::Nameable;
-use cursive::views::{Dialog, EditView, ListView, ViewRef};
-use crate::utils::{crypto, construct_info_dialog};
+use cursive::views::{Dialog, EditView, ListView, ViewRef, TextView};
+use crate::utils::{crypto, construct_dialog};
 use crate::utils::login::Login;
 use crate::utils::user_config::UserConfig;
 use super::Screen;
@@ -32,7 +32,8 @@ impl Screen for CreateLoginScreen {
                 CreateLoginScreen::create_password(username.get_content().as_str(), 
                 password.get_content().as_str(), name.get_content().as_str(), x);
                 
-                x.add_layer(construct_info_dialog("Success!", "Password has been encrypted and stored successfully!"));
+                x.add_layer(construct_dialog("Success!", TextView::new("Password has been encrypted and stored successfully!"), 
+                |x| { x.pop_layer(); }));
             });
 
         cursive.add_layer(view);
@@ -43,7 +44,9 @@ impl Screen for CreateLoginScreen {
 impl CreateLoginScreen {
     fn create_password(username: &str, password: &str, name: &str, cursive: &mut Cursive) {
         // It will have to encrypt the password first!
-        let e_passwd = crypto::encrypt(password);
+        let key = &cursive.user_data::<UserConfig>().unwrap().master_password;
+
+        let e_passwd = crypto::encrypt(password, key);
 
         let login = Login::new(username, &e_passwd, name);
 

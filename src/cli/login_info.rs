@@ -1,4 +1,6 @@
-use crate::utils::{login::Login, construct_info_dialog, crypto::decrypt};
+use cursive::views::TextView;
+
+use crate::utils::{login::Login, construct_dialog, crypto::decrypt, user_config::UserConfig};
 
 pub struct LoginInfoScreen;
 
@@ -6,8 +8,10 @@ pub struct LoginInfoScreen;
 impl LoginInfoScreen {
     pub fn draw_window(cursive: &mut cursive::Cursive, login: &Login) {  
         // Formats the content nicely.      
-        let content = format!("Name: {}\nUsername: {}\nPassword: {}", &login.name, &login.username, decrypt(&login.password));
-        cursive.add_layer(construct_info_dialog("Info", &content));
+        let key = &cursive.user_data::<UserConfig>().unwrap().master_password;
+
+        let content = format!("Name: {}\nUsername: {}\nPassword: {}", &login.name, &login.username, decrypt(&login.password, key));
+        cursive.add_layer(construct_dialog("Info", TextView::new(content), |x| { x.pop_layer(); }));
     }
 }
 
