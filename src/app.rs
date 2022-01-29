@@ -6,7 +6,7 @@ use cursive::views::{Button, LinearLayout, Dialog, TextView, Panel};
 use cursive::{Cursive, theme::Theme};
 use cursive::theme::PaletteColor::{Background, Shadow, View, Primary};
 use crate::cli::Screen;
-use crate::cli::{create_login::CreateLoginScreen, settings::SettingsScreen, list_logins::ListLoginsScreen};
+use crate::cli::{create_login::CreateLoginScreen, list_logins::ListLoginsScreen};
 use crate::utils::user_config::UserConfig; 
 
 pub struct App {
@@ -30,7 +30,7 @@ impl App {
 
 
     /// Starts event loop and draws the main screen.
-    pub fn start_event_loop(&mut self) {          
+    pub fn start_event_loop(&mut self) {    
         let view = Panel::new(LinearLayout::new(Orientation::Vertical)
             .child(Button::new_raw("Create new password", |x| {
                 CreateLoginScreen::draw_window(x);
@@ -40,10 +40,6 @@ impl App {
                 ListLoginsScreen::draw_window(x);
             }))
 
-            .child(Button::new_raw("Settings", |x| {
-                SettingsScreen::draw_window(x);
-            }))
-         
             .child(Button::new_raw("Clear passwords", |q| {
                 q.with_user_data(|cfg: &mut UserConfig| cfg.logins.clear());
 

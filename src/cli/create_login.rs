@@ -1,10 +1,11 @@
 use cursive::Cursive;
 use cursive::traits::Nameable;
-use cursive::views::{Dialog, EditView, ListView, ViewRef, TextView};
+use cursive::views::{Dialog, EditView, ListView, ViewRef};
+use crate::utils::{crypto, construct_info_dialog};
 use crate::utils::login::Login;
 use crate::utils::user_config::UserConfig;
-
 use super::Screen;
+
 pub struct CreateLoginScreen;
 
 impl Screen for CreateLoginScreen {
@@ -28,15 +29,10 @@ impl Screen for CreateLoginScreen {
                 let password: ViewRef<EditView> = x.find_name("password").unwrap();
                 let name: ViewRef<EditView> = x.find_name("name").unwrap();
 
-
                 CreateLoginScreen::create_password(username.get_content().as_str(), 
                 password.get_content().as_str(), name.get_content().as_str(), x);
                 
-                x.pop_layer();
-
-                x.add_layer(Dialog::new()
-                    .title("Success!")
-                    .content(TextView::new("Entry created successfully.")));
+                x.add_layer(construct_info_dialog("Success!", "Password has been encrypted and stored successfully!"));
             });
 
         cursive.add_layer(view);
@@ -46,8 +42,11 @@ impl Screen for CreateLoginScreen {
 
 impl CreateLoginScreen {
     fn create_password(username: &str, password: &str, name: &str, cursive: &mut Cursive) {
-        let login = Login::new(username, password, name);
+        // It will have to encrypt the password first!
+        let e_passwd = crypto::encrypt(password);
 
-        cursive.with_user_data(|cfg: &mut UserConfig| cfg.logins.push(login.to_owned()));
+        let login = Login::new(username, &e_passwd, name);
+
+        cursive.with_user_data(|cfg: &mut UserConfig| cfg.logins.push(login));
     }
 }
