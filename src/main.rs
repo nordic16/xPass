@@ -2,13 +2,14 @@ mod cli;
 mod utils;
 mod app;
 
+use std::error::Error;
+
 use app::App;
 use confy;
 use utils::user_config::UserConfig;
 
-
-fn main()  {
-    let cfg: UserConfig = confy::load("config").expect("bruh!!!");
+fn main() -> Result<(), Box<dyn Error>> {
+    let cfg: UserConfig = confy::load("xPass")?;
     let mut app = App::new();
 
     app.cursive.set_user_data(cfg);
@@ -16,5 +17,10 @@ fn main()  {
 
     let app_data = app.cursive.user_data::<UserConfig>().unwrap(); 
 
-    confy::store("config", app_data).expect("Bruhhh!!");
+    let data = toml::ser::to_string(&app_data)?;
+    println!("{}", data);
+
+    confy::store("xPass", app_data)?;
+
+    Ok(())
 }

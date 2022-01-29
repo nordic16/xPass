@@ -5,4 +5,7 @@ Well, the project itself is mostly done, and it is kind of usable, but the code 
 
 I'll be refactoring the code as I learn.
 
-**Note: my code sucks!**
+# TODO: 
+- [x] Encryption
+- [x] A master password system
+- [ ] Code optimization

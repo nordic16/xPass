@@ -6,7 +6,7 @@ use serde::{Serialize, Deserialize};
 /// NOTE: Name is the name used to represent the entry!
 
 /// TODO: implement IDs. This will simplify things a lot.
-#[derive(Serialize, Deserialize, Clone)]
+#[derive(Serialize, Deserialize, Clone, Debug)]
 pub struct Login {
     pub(crate) name: String,
     pub(crate) username: String,

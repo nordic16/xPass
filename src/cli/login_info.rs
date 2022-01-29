@@ -1,25 +1,17 @@
-use cursive::views::{Dialog, ListView, TextView};
-use crate::utils::{login::Login};
+use cursive::views::TextView;
+
+use crate::utils::{login::Login, construct_dialog, crypto::decrypt, user_config::UserConfig};
 
 pub struct LoginInfoScreen;
 
 
 impl LoginInfoScreen {
-    pub fn draw_window(cursive: &mut cursive::Cursive, login: &Login) {        
-        let view = Dialog::new()
-            .title("Info")
-            .content(ListView::new()
-                .child("Name: ", TextView::new(&login.name))
-                .child("Username: ", TextView::new(&login.username))
-                .child("Password: ", TextView::new(&login.password))
-            )
+    pub fn draw_window(cursive: &mut cursive::Cursive, login: &Login) {  
+        // Formats the content nicely.      
+        let key = &cursive.user_data::<UserConfig>().unwrap().master_password;
 
-            .button("Close", |x| {
-                x.pop_layer();
-            });
-
-            
-        cursive.add_layer(view);
+        let content = format!("Name: {}\nUsername: {}\nPassword: {}", &login.name, &login.username, decrypt(&login.password, key));
+        cursive.add_layer(construct_dialog("Info", TextView::new(content), |x| { x.pop_layer(); }));
     }
 }
 
