@@ -17,9 +17,6 @@ fn main() -> Result<(), Box<dyn Error>> {
 
     let app_data = app.cursive.user_data::<UserConfig>().unwrap(); 
 
-    let data = toml::ser::to_string(&app_data)?;
-    println!("{}", data);
-
     confy::store("xPass", app_data)?;
 
     Ok(())
