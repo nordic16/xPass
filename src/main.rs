@@ -21,3 +21,19 @@ fn main() -> Result<(), Box<dyn Error>> {
 
     Ok(())
 }
+
+
+#[cfg(test)]
+mod tests {
+    use crate::cli::generate_password::GeneratePasswordScreen;
+
+    #[test]
+    /// Attempts to generate 32 passwords.
+    fn test_password_generator() {
+        let len = 16;
+
+        for i in 0..32 {
+            println!("Attempt {}: {}", (i + 1), GeneratePasswordScreen::gen_secure_password(len));
+        }
+    }
+}

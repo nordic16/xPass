@@ -7,8 +7,9 @@ use cursive::views::{Button, LinearLayout, Dialog, TextView, Panel, ListView, Ed
 use cursive::{Cursive, theme::Theme};
 use cursive::theme::PaletteColor::{Background, Shadow, View, Primary};
 use crate::cli::Screen;
+use crate::cli::generate_password::GeneratePasswordScreen;
 use crate::cli::{create_login::CreateLoginScreen, list_logins::ListLoginsScreen};
-use crate::utils::construct_info_dialog;
+use crate::utils::construct_dialog;
 use crate::utils::user_config::UserConfig; 
 
 pub struct App {
@@ -59,7 +60,7 @@ impl App {
             }))
 
             .child(Button::new_raw("Generate password", |x| {
-                CreateLoginScreen::draw_window(x);
+                GeneratePasswordScreen::draw_window(x);
             }))
 
             .child(Button::new_raw("Clear passwords", |q| {
@@ -97,7 +98,7 @@ impl App {
             let c_password: ViewRef<EditView> = x.find_name("confirm_password").unwrap();
     
             if password.get_content() == c_password.get_content() && !password.get_content().is_empty() {
-                x.add_layer(construct_info_dialog("Success!", TextView::new("Password set!"), |cx| {
+                x.add_layer(construct_dialog("Success!", TextView::new("Password set!"), |cx| {
                     cx.pop_layer();
                     cx.pop_layer();
 
@@ -109,11 +110,11 @@ impl App {
 
             // Invalid password.
             } else {
-                x.add_layer(construct_info_dialog("Error.", TextView::new("Make sure your passwords match!"), |x| { x.pop_layer(); }));   
+                x.add_layer(construct_dialog("Error.", TextView::new("Make sure your passwords match!"), |x| { x.pop_layer(); }));   
             }
         };
         
-        cursive.add_layer(construct_info_dialog("Set a master password.", content, action));
+        cursive.add_layer(construct_dialog("Set a master password.", content, action));
     }
 
 }
