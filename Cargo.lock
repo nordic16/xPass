@@ -726,6 +726,7 @@ version = "0.1.0"
 dependencies = [
  "confy",
  "cursive",
+ "lazy_static",
  "magic-crypt",
  "serde",
 ]

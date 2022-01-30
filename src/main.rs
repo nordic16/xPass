@@ -7,17 +7,19 @@ use std::error::Error;
 use app::App;
 use confy;
 use utils::user_config::UserConfig;
+use lazy_static::lazy_static;
+
+lazy_static! {
+    static ref CFG : UserConfig = confy::load("xPass").unwrap();
+}
 
 fn main() -> Result<(), Box<dyn Error>> {
-    let cfg: UserConfig = confy::load("xPass")?;
     let mut app = App::new();
 
-    app.cursive.set_user_data(cfg);
+    app.cursive.set_user_data(&CFG);
     app.start_event_loop();
 
-    let app_data = app.cursive.user_data::<UserConfig>().unwrap(); 
-
-    confy::store("xPass", app_data)?;
+    confy::store("xPass", &*CFG)?;
 
     Ok(())
 }
