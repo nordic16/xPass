@@ -57,6 +57,10 @@ impl App {
                 ListLoginsScreen::draw_window(x);
             }))
 
+            .child(Button::new_raw("Generate password", |x| {
+                CreateLoginScreen::draw_window(x);
+            }))
+
             .child(Button::new_raw("Clear passwords", |q| {
                 q.with_user_data(|cfg: &mut UserConfig| cfg.logins.clear());
                 Dialog::info("Passwords cleared!");

@@ -19,9 +19,7 @@ impl Screen for CreateLoginScreen {
                 .child("Password: ", EditView::new().secret().with_name("password"))
             )
 
-            .button("Cancel", |x| {
-                x.pop_layer();
-            })
+            .dismiss_button("Cancel")
             
             .button("Create login", |x| {
                 //... create password

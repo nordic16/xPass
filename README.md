@@ -8,4 +8,5 @@ I'll be refactoring the code as I learn.
 # TODO: 
 - [x] Encryption
 - [x] A master password system
+- [ ] A password generator
 - [ ] Code optimization
