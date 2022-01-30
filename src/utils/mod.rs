@@ -9,7 +9,7 @@ pub mod crypto;
 
 /// Useful for retrieving a padded dialog and to reduce code duplication.
 /// closure defines the Ok button's callback.
-pub fn construct_dialog<T, C>(title: &str, content: T, closure: C) -> Dialog 
+pub fn construct_info_dialog<T, C>(title: &str, content: T, closure: C) -> Dialog 
     where T: View,
     C: Fn(&mut Cursive) + 'static
 {
