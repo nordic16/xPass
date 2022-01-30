@@ -1,11 +1,10 @@
+mod app;
 mod cli;
 mod utils;
-mod app;
 
 use std::error::Error;
 
 use app::App;
-use confy;
 use utils::user_config::UserConfig;
 
 fn main() -> Result<(), Box<dyn Error>> {
@@ -15,13 +14,12 @@ fn main() -> Result<(), Box<dyn Error>> {
     app.cursive.set_user_data(cfg);
     app.start_event_loop();
 
-    let app_data = app.cursive.user_data::<UserConfig>().unwrap(); 
+    let app_data = app.cursive.user_data::<UserConfig>().unwrap();
 
     confy::store("xPass", app_data)?;
 
     Ok(())
 }
-
 
 #[cfg(test)]
 mod tests {

@@ -1,8 +1,7 @@
-use serde::{Serialize, Deserialize};
-
+use serde::{Deserialize, Serialize};
 
 /// Representation of a Login entry.
-/// 
+///
 /// NOTE: Name is the name used to represent the entry!
 
 /// TODO: implement IDs. This will simplify things a lot.
@@ -13,9 +12,12 @@ pub struct Login {
     pub(crate) password: String,
 }
 
-
 impl Login {
     pub fn new(username: &str, password: &str, name: &str) -> Self {
-        Login { username: username.to_owned(), password: password.to_owned(), name: name.to_owned() }
+        Login {
+            username: username.to_owned(),
+            password: password.to_owned(),
+            name: name.to_owned(),
+        }
     }
 }
