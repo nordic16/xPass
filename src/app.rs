@@ -8,7 +8,7 @@ use cursive::event::Key;
 use cursive::theme::Color;
 use cursive::theme::PaletteColor::{Background, Primary, Shadow, View};
 use cursive::traits::{Nameable, Resizable};
-use cursive::views::{Button, Dialog, EditView, LinearLayout, ListView, Panel, TextView, ViewRef};
+use cursive::views::{Button, Dialog, EditView, LinearLayout, ListView, PaddedView, Panel, TextView, ViewRef};
 use cursive::CursiveExt;
 use cursive::{theme::Theme, Cursive};
 
@@ -37,12 +37,20 @@ impl App {
 
         // Unset password: Must set a new one.
         if app_data.master_password.is_empty() {
-            App::draw_masterpassword_menu(&mut self.cursive);
+            App::draw_masterpassword_screen(&mut self.cursive);
         } else {
-            App::draw_main_menu(&mut self.cursive);
+            App::draw_login_screen(&mut self.cursive);
         }
 
         self.cursive.run();
+    }
+
+    // Draws the screen that allows the user to login.
+    // TODO: actually implement this lmao
+    fn draw_login_screen(cursive: &mut Cursive) {
+        let content = ListView::new().child("Password", EditView::new().secret()).min_width(25);
+
+        cursive.add_layer(construct_dialog("Enter master password.", content, |x| ()));
     }
 
     fn draw_main_menu(cursive: &mut Cursive) {
@@ -77,10 +85,10 @@ impl App {
     }
 
     /// Draws the screen that lets the user set the master password.
-    fn draw_masterpassword_menu(cursive: &mut Cursive) {
+    fn draw_masterpassword_screen(cursive: &mut Cursive) {
         let content = ListView::new()
-            .child("Password", EditView::new().with_name("password"))
-            .child("Confirm Password", EditView::new().with_name("confirm_password"))
+            .child("Password", EditView::new().secret().with_name("password"))
+            .child("Confirm Password", EditView::new().secret().with_name("confirm_password"))
             .min_width(35);
 
         // Closure that will be executed when the user presses ok.
