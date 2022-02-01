@@ -37,12 +37,49 @@ impl App {
 
         // Unset password: Must set a new one.
         if app_data.master_password.is_empty() {
-            App::draw_masterpassword_menu(&mut self.cursive);
+            App::draw_masterpassword_screen(&mut self.cursive);
         } else {
-            App::draw_main_menu(&mut self.cursive);
+            App::draw_login_screen(&mut self.cursive);
         }
 
         self.cursive.run();
+    }
+
+    // Draws the screen that allows the user to login.
+    fn draw_login_screen(cursive: &mut Cursive) {
+        let content = ListView::new()
+            .child("Password", EditView::new().secret().with_name("password"))
+            .min_width(25);
+
+        let action = |x: &mut Cursive| {
+            let mut password: ViewRef<EditView> = x.find_name("password").unwrap();
+            let cfg = x.user_data::<UserConfig>().unwrap();
+
+            if password.get_content().to_string() == cfg.master_password {
+                x.add_layer(construct_dialog(
+                    "Success!",
+                    TextView::new("Login successful!"),
+                    |x| {
+                        x.pop_layer();
+                        x.pop_layer();
+
+                        App::draw_main_menu(x);
+                    },
+                ));
+            } else {
+                password.set_content("");
+
+                x.add_layer(construct_dialog(
+                    "Password is wrong!",
+                    TextView::new("Check your password and try again."),
+                    |x| {
+                        x.pop_layer();
+                    },
+                ));
+            }
+        };
+
+        cursive.add_layer(construct_dialog("Enter master password.", content, action));
     }
 
     fn draw_main_menu(cursive: &mut Cursive) {
@@ -77,10 +114,13 @@ impl App {
     }
 
     /// Draws the screen that lets the user set the master password.
-    fn draw_masterpassword_menu(cursive: &mut Cursive) {
+    fn draw_masterpassword_screen(cursive: &mut Cursive) {
         let content = ListView::new()
-            .child("Password", EditView::new().with_name("password"))
-            .child("Confirm Password", EditView::new().with_name("confirm_password"))
+            .child("Password", EditView::new().secret().with_name("password"))
+            .child(
+                "Confirm Password",
+                EditView::new().secret().with_name("confirm_password"),
+            )
             .min_width(35);
 
         // Closure that will be executed when the user presses ok.
@@ -89,21 +129,31 @@ impl App {
             let c_password: ViewRef<EditView> = x.find_name("confirm_password").unwrap();
 
             if password.get_content() == c_password.get_content() && !password.get_content().is_empty() {
-                x.add_layer(construct_dialog("Success!", TextView::new("Password set!"), |cx| {
-                    cx.pop_layer();
-                    cx.pop_layer();
+                x.add_layer(construct_dialog(
+                    "Success!",
+                    TextView::new("Password set!"),
+                    |cx| {
+                        cx.pop_layer();
+                        cx.pop_layer();
 
-                    App::draw_main_menu(cx);
-                }));
+                        App::draw_main_menu(cx);
+                    },
+                ));
 
                 // Actually sets the password.
-                x.with_user_data(|cfg: &mut UserConfig| cfg.master_password = password.get_content().to_string());
+                x.with_user_data(|cfg: &mut UserConfig| {
+                    cfg.master_password = password.get_content().to_string()
+                });
 
             // Invalid password.
             } else {
-                x.add_layer(construct_dialog("Error.", TextView::new("Make sure your passwords match!"), |x| {
-                    x.pop_layer();
-                }));
+                x.add_layer(construct_dialog(
+                    "Error.",
+                    TextView::new("Make sure your passwords match!"),
+                    |x| {
+                        x.pop_layer();
+                    },
+                ));
             }
         };
         cursive.add_layer(construct_dialog("Set a master password.", content, action));
