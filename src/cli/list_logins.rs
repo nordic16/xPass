@@ -21,7 +21,9 @@ impl Screen for ListLoginsScreen {
                 right: 0,
                 bottom: 2,
             },
-            ScrollView::new(LinearLayout::new(cursive::direction::Orientation::Vertical).with_name("logins")),
+            ScrollView::new(
+                LinearLayout::new(cursive::direction::Orientation::Vertical).with_name("logins"),
+            ),
         ))
         .title("Logins")
         .min_size((22, 0));
@@ -38,7 +40,8 @@ impl Screen for ListLoginsScreen {
                 }
             } else {
                 q.add_child(
-                    TextView::new("No logins!\nAdd some, and they will be listed here!").h_align(cursive::align::HAlign::Center),
+                    TextView::new("No logins!\nAdd some, and they will be listed here!")
+                        .h_align(cursive::align::HAlign::Center),
                 );
             }
         });

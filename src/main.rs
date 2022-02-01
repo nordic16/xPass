@@ -35,12 +35,14 @@ mod tests {
         let len = 20;
 
         for i in 0..32 {
-            println!("Attempt {}: {}", (i + 1), GeneratePasswordScreen::gen_secure_password(len));
+            let password = GeneratePasswordScreen::gen_secure_password(len);
+            println!("Attempt {}: {} ({})", (i + 1), password, password.len());
         }
     }
 
     #[test]
     fn test_calculate_hash() {
+        // This is the best password of All Time
         let password = "hello there!";
         let hash = crypto::calculate_hash(&password);
         let parsed_hash = PasswordHash::new(hash.as_str()).unwrap();

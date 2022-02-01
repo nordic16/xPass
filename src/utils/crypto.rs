@@ -21,5 +21,8 @@ pub fn decrypt(cipher: &str, key: &str) -> String {
 /// NOTE: THIS IS WAY TOO SLOW: TAKES MORE THAN 10 seconds.
 pub fn calculate_hash(password: &str) -> String {
     let salt = SaltString::generate(&mut OsRng);
-    Scrypt.hash_password(password.as_bytes(), &salt).unwrap().to_string()
+    Scrypt
+        .hash_password(password.as_bytes(), &salt)
+        .unwrap()
+        .to_string()
 }
