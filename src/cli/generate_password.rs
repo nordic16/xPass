@@ -48,7 +48,7 @@ impl Screen for GeneratePasswordScreen {
                         if let Ok(_) = clipboard.set_contents(String::from(passref.get_inner().get_content().source())) {
                             x.add_layer(construct_dialog(
                                 "Success!",
-                                TextView::new("Password has been copied to  the clipboard."),
+                                TextView::new("Password has been copied to the clipboard."),
                                 |x| {
                                     x.pop_layer();
                                 },
