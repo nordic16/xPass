@@ -1,3 +1,4 @@
+use clipboard::{ClipboardContext, ClipboardProvider};
 use cursive::{
     direction::Orientation,
     traits::Nameable,
@@ -19,7 +20,7 @@ impl Screen for GeneratePasswordScreen {
                 0,
                 0,
                 1,
-                HideableView::new(TextView::new("Password: generating password..."))
+                HideableView::new(TextView::new("generating password...").h_align(cursive::align::HAlign::Center))
                     .hidden()
                     .with_name("gen_password"),
             ))
@@ -31,18 +32,29 @@ impl Screen for GeneratePasswordScreen {
                         0,
                         0,
                         Button::new_raw("Generate Password", |x| {
-                            let mut view =
-                                x.find_name::<HideableView<TextView>>("gen_password").unwrap();
-                            view.set_visible(true);
+                            let mut passref = x.find_name::<HideableView<TextView>>("gen_password").unwrap();
+                            passref.set_visible(true);
 
                             // Displays the newly generated password to the user.
-                            view.get_inner_mut().set_content(format!(
-                                "Password: {}",
-                                GeneratePasswordScreen::gen_secure_password(16)
-                            ));
+                            passref
+                                .get_inner_mut()
+                                .set_content(GeneratePasswordScreen::gen_secure_password(16));
                         }),
                     ))
-                    .child(Button::new_raw("Copy to clipboard", |_| todo!())),
+                    .child(Button::new_raw("Copy to clipboard", |x| {
+                        let mut clipboard: ClipboardContext = ClipboardProvider::new().unwrap();
+                        let passref = x.find_name::<HideableView<TextView>>("gen_password").unwrap();
+
+                        if let Ok(_) = clipboard.set_contents(String::from(passref.get_inner().get_content().source())) {
+                            x.add_layer(construct_dialog(
+                                "Success!",
+                                TextView::new("Password has been copied to  the clipboard."),
+                                |x| {
+                                    x.pop_layer();
+                                },
+                            ));
+                        }
+                    })),
             );
 
         cursive.add_layer(construct_dialog("Generate password", content, |x| {

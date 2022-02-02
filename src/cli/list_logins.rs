@@ -3,7 +3,7 @@ use crate::utils::user_config::UserConfig;
 use cursive::{
     traits::{Nameable, Resizable},
     view::Margins,
-    views::{Button, LinearLayout, PaddedView, Panel, ScrollView, TextView, Dialog},
+    views::{Button, LinearLayout, PaddedView, Panel, ScrollView, TextView},
 };
 
 /// Lists all existing entries.
@@ -21,9 +21,7 @@ impl Screen for ListLoginsScreen {
                 right: 0,
                 bottom: 2,
             },
-            ScrollView::new(
-                LinearLayout::new(cursive::direction::Orientation::Vertical).with_name("logins"),
-            ),
+            ScrollView::new(LinearLayout::new(cursive::direction::Orientation::Vertical).with_name("logins")),
         ))
         .title("Logins")
         .min_size((22, 0));
@@ -37,7 +35,7 @@ impl Screen for ListLoginsScreen {
                 for i in cfg.logins.iter() {
                     let login = i.clone(); // temporary fix xD
 
-                    q.add_child(Button::new_raw(&i.name,  move |q| {
+                    q.add_child(Button::new_raw(&i.name, move |q| {
                         LoginInfoScreen::draw_window(q, &login);
                     }));
                 }

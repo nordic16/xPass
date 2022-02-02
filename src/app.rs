@@ -56,16 +56,12 @@ impl App {
             let cfg = x.user_data::<UserConfig>().unwrap();
 
             if password.get_content().to_string() == cfg.master_password {
-                x.add_layer(construct_dialog(
-                    "Success!",
-                    TextView::new("Login successful!"),
-                    |x| {
-                        x.pop_layer();
-                        x.pop_layer();
+                x.add_layer(construct_dialog("Success!", TextView::new("Login successful!"), |x| {
+                    x.pop_layer();
+                    x.pop_layer();
 
-                        App::draw_main_menu(x);
-                    },
-                ));
+                    App::draw_main_menu(x);
+                }));
             } else {
                 password.set_content("");
 
@@ -117,10 +113,7 @@ impl App {
     fn draw_masterpassword_screen(cursive: &mut Cursive) {
         let content = ListView::new()
             .child("Password", EditView::new().secret().with_name("password"))
-            .child(
-                "Confirm Password",
-                EditView::new().secret().with_name("confirm_password"),
-            )
+            .child("Confirm Password", EditView::new().secret().with_name("confirm_password"))
             .min_width(35);
 
         // Closure that will be executed when the user presses ok.
@@ -129,21 +122,15 @@ impl App {
             let c_password: ViewRef<EditView> = x.find_name("confirm_password").unwrap();
 
             if password.get_content() == c_password.get_content() && !password.get_content().is_empty() {
-                x.add_layer(construct_dialog(
-                    "Success!",
-                    TextView::new("Password set!"),
-                    |cx| {
-                        cx.pop_layer();
-                        cx.pop_layer();
+                x.add_layer(construct_dialog("Success!", TextView::new("Password set!"), |cx| {
+                    cx.pop_layer();
+                    cx.pop_layer();
 
-                        App::draw_main_menu(cx);
-                    },
-                ));
+                    App::draw_main_menu(cx);
+                }));
 
                 // Actually sets the password.
-                x.with_user_data(|cfg: &mut UserConfig| {
-                    cfg.master_password = password.get_content().to_string()
-                });
+                x.with_user_data(|cfg: &mut UserConfig| cfg.master_password = password.get_content().to_string());
 
             // Invalid password.
             } else {
