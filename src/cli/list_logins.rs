@@ -30,15 +30,15 @@ impl Screen for ListLoginsScreen {
         cursive.add_layer(view);
 
         // This code sucks.
-        cursive.call_on_name("logins", |q: &mut LinearLayout| {
+        cursive.call_on_name("logins", move |q: &mut LinearLayout| {
             if !cfg.logins.is_empty() {
-                for i in cfg.logins.iter() {
-                    let login = i.clone(); // temporary fix xD
+                cfg.logins.iter().for_each(|l| {
+                    let login = l.clone();
 
-                    q.add_child(Button::new_raw(&i.name, move |q| {
+                    q.add_child(Button::new_raw(&l.name, move |q| {
                         LoginInfoScreen::draw_window(q, &login);
-                    }));
-                }
+                    }))
+                });
             } else {
                 q.add_child(
                     TextView::new("No logins!\nAdd some, and they will be listed here!")
