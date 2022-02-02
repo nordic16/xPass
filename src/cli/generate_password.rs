@@ -31,15 +31,12 @@ impl Screen for GeneratePasswordScreen {
                         0,
                         0,
                         Button::new_raw("Generate Password", |x| {
-                            let mut view =
-                                x.find_name::<HideableView<TextView>>("gen_password").unwrap();
+                            let mut view = x.find_name::<HideableView<TextView>>("gen_password").unwrap();
                             view.set_visible(true);
 
                             // Displays the newly generated password to the user.
-                            view.get_inner_mut().set_content(format!(
-                                "Password: {}",
-                                GeneratePasswordScreen::gen_secure_password(16)
-                            ));
+                            view.get_inner_mut()
+                                .set_content(format!("Password: {}", GeneratePasswordScreen::gen_secure_password(16)));
                         }),
                     ))
                     .child(Button::new_raw("Copy to clipboard", |_| todo!())),
