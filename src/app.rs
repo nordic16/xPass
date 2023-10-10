@@ -55,6 +55,7 @@ impl App {
             let mut password: ViewRef<EditView> = x.find_name("password").unwrap();
             let cfg = x.user_data::<UserConfig>().unwrap();
 
+            // If password matches the one previously set by the user draw the main menu screen and remove everything else.
             if password.get_content().to_string() == cfg.master_password {
                 x.add_layer(construct_dialog("Success!", TextView::new("Login successful!"), |x| {
                     x.pop_layer();
