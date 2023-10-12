@@ -26,11 +26,10 @@ pub fn calculate_hash(password: &str) -> String {
 
 
 pub fn calculate_password_entropy(password: &str) -> f32 {
-    let mut entropy: i32;
     let len = password.len() as i32;
     let pool = calculate_password_pool(password);
 
-       return len as f32 * (pool as f32).log2();
+    return len as f32 * (pool as f32).log2();
 }
 
 
@@ -42,9 +41,7 @@ fn calculate_password_pool(password: &str) -> i32 {
     let minescules = ['a'..'z'];
     let capitals = ['A'..'Z'];
     let numbers = ['0'..'9'];
-
-    // too lazy to do this any other way.
-    let digits = [['!'..'/'], [':'..'@'], ['['.. '`'], ['{'..'~']];
+    let digits = [['!'..'/'], [':'..'@'], ['['..'`'], ['{'..'~']];
 
     if password.chars().any(|f| matches!(f, minescules)) {
         pool += 26;
@@ -61,7 +58,6 @@ fn calculate_password_pool(password: &str) -> i32 {
     if password.chars().any(|f| matches!(f, digits)) {
         pool += 32;
     }
-
 
     return pool;
 }
