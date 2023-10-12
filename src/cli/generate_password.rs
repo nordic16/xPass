@@ -15,23 +15,15 @@ impl Screen for GeneratePasswordScreen {
     fn draw_window(cursive: &mut cursive::Cursive) {
         // The password field is hidden until a password is generated.
         let content = LinearLayout::new(Orientation::Vertical)
-            .child(PaddedView::lrtb(
-                0,
-                0,
-                0,
-                1,
+            .child(PaddedView::lrtb(0, 0, 0, 1,
                 HideableView::new(TextView::new("generating password...").h_align(cursive::align::HAlign::Center))
-                    .hidden()
-                    .with_name("gen_password"),
-            )).child(HideableView::new(TextView::new("Entropy")
-                    .h_align(cursive::align::HAlign::Center)).hidden().with_name("entropy"))
+                        .hidden()
+                        .with_name("gen_password"),
+            )).child(PaddedView::lrtb(0, 0, 0, 1, HideableView::new(TextView::new("Entropy")
+                    .h_align(cursive::align::HAlign::Center)).hidden().with_name("entropy")))
             .child(
                 LinearLayout::new(Orientation::Horizontal)
-                    .child(PaddedView::lrtb(
-                        0,
-                        2,
-                        0,
-                        0,
+                    .child(PaddedView::lrtb(0, 2, 0, 0, 
                         Button::new_raw("Generate Password", |x| {
                             let mut passref = x.find_name::<HideableView<TextView>>("gen_password").unwrap();
                             let mut entropyref = x.find_name::<HideableView<TextView>>("entropy").unwrap();
@@ -47,7 +39,7 @@ impl Screen for GeneratePasswordScreen {
                                 .set_content(&password);
                             
                             
-                            entropyref.get_inner_mut().set_content(format!("Password entropy: {}", crypto::calculate_password_entropy(&password)));
+                            entropyref.get_inner_mut().set_content(format!("Password entropy: {} bits", crypto::calculate_password_entropy(&password)));
                         }),
                     ))
                     .child(Button::new_raw("Copy to clipboard", |x| {
