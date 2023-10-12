@@ -12,8 +12,7 @@ impl Screen for CreateLoginScreen {
     fn draw_window(cursive: &mut Cursive) {
         let view = Dialog::new()
             .title("Create a new login")
-            .content(
-                ListView::new()
+            .content(ListView::new()
                     .child("Name:", EditView::new().with_name("name"))
                     .child("Username: ", EditView::new().with_name("username"))
                     .child("Password: ", EditView::new().secret().with_name("password")),

@@ -3,8 +3,6 @@ use serde::{Deserialize, Serialize};
 /// Representation of a Login entry.
 ///
 /// NOTE: Name is the name used to represent the entry!
-
-/// TODO: implement IDs. This will simplify things a lot.
 #[derive(Serialize, Deserialize, Clone, Debug)]
 pub struct Login {
     pub(crate) name: String,
