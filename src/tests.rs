@@ -18,7 +18,7 @@
 
         for i in 0..num {
             let password = GeneratePasswordScreen::gen_secure_password(len);
-            println!("Attempt {}: {} ({})", (i + 1), password, password.len());
+            println!("Attempt {}: {} | length: {} | entropy: {}", (i + 1), password, password.len(), crypto::calculate_password_entropy(&password));
         }
 
         let elapsed_time = Instant::now() - time;
