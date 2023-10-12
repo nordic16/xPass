@@ -1,3 +1,4 @@
+use crate::DEBUG;
 use crate::cli::generate_password::GeneratePasswordScreen;
 use crate::cli::Screen;
 use crate::cli::{create_login::CreateLoginScreen, list_logins::ListLoginsScreen};
@@ -38,8 +39,10 @@ impl App {
         // Unset password: Must set a new one.
         if app_data.master_password.is_empty() {
             App::draw_masterpassword_screen(&mut self.cursive);
-        } else {
+        } else if !DEBUG { // in case i'm debugging.
             App::draw_login_screen(&mut self.cursive);
+        } else {
+            App::draw_main_menu(&mut self.cursive);
         }
 
         self.cursive.run();

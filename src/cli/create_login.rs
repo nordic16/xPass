@@ -49,9 +49,7 @@ impl CreateLoginScreen {
     fn create_password(username: &str, password: &str, name: &str, cursive: &mut Cursive) {
         // It will have to encrypt the password first!
         let key = &cursive.user_data::<UserConfig>().unwrap().master_password;
-
         let e_passwd = crypto::encrypt(password, key);
-
         let login = Login::new(username, &e_passwd, name);
 
         cursive.with_user_data(|cfg: &mut UserConfig| cfg.logins.push(login));

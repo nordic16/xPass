@@ -8,6 +8,9 @@ use std::error::Error;
 use app::App;
 use utils::user_config::UserConfig;
 
+// disables password authentication
+static DEBUG: bool = true;
+
 fn main() -> Result<(), Box<dyn Error>> {
     let cfg: UserConfig = confy::load("xPass")?;
     let mut app = App::new();

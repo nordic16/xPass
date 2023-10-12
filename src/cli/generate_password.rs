@@ -2,7 +2,7 @@ use clipboard::{ClipboardContext, ClipboardProvider};
 use cursive::{
     direction::Orientation,
     traits::Nameable,
-    views::{Button, HideableView, LinearLayout, PaddedView, TextView},
+    views::{Button, HideableView, LinearLayout, PaddedView, TextView, EditView, ListView, ResizedView, TextArea, ViewRef},
 };
 
 use super::Screen;
@@ -15,7 +15,9 @@ impl Screen for GeneratePasswordScreen {
     fn draw_window(cursive: &mut cursive::Cursive) {
         // The password field is hidden until a password is generated.
         let content = LinearLayout::new(Orientation::Vertical)
-            .child(PaddedView::lrtb(0, 0, 0, 1,
+            .child(ListView::new().child("length: ", ResizedView::with_fixed_width(10, 
+            TextArea::new().with_name("password_len"))))
+            .child(PaddedView::lrtb(0, 0, 1, 0,
                 HideableView::new(TextView::new("generating password...").h_align(cursive::align::HAlign::Center))
                         .hidden()
                         .with_name("gen_password"),
@@ -27,19 +29,24 @@ impl Screen for GeneratePasswordScreen {
                         Button::new_raw("Generate Password", |x| {
                             let mut passref = x.find_name::<HideableView<TextView>>("gen_password").unwrap();
                             let mut entropyref = x.find_name::<HideableView<TextView>>("entropy").unwrap();
+                            let lenref: ViewRef<TextArea> = x.find_name("password_len").unwrap();
 
-                            entropyref.set_visible(true);
-                            passref.set_visible(true);
+                            // Some dumbass might think it's a good idea to try to create a password with *no* length or with letters.
+                            if !lenref.get_content().is_empty() && lenref.get_content().parse::<i32>().is_ok() {
+                                let len = lenref.get_content().parse::<usize>().unwrap();
 
-                            // Displays the newly generated password to the user.
-                            let password = GeneratePasswordScreen::gen_secure_password(16);
-
-                            passref
-                                .get_inner_mut()
-                                .set_content(&password);
+                                entropyref.set_visible(true);
+                                passref.set_visible(true);
                             
-                            
-                            entropyref.get_inner_mut().set_content(format!("Password entropy: {} bits", crypto::calculate_password_entropy(&password)));
+                                // these constraints might change one day (except for the 0 one ofc, no password can have a negative length.)
+                                if len < 50 && len > 0 {
+                                    let password = GeneratePasswordScreen::gen_secure_password(len as usize);
+
+                                    // Displays the newly generated password to the user.
+                                    passref.get_inner_mut().set_content(&password);
+                                    entropyref.get_inner_mut().set_content(format!("Password entropy: {} bits", crypto::calculate_password_entropy(&password)));
+                                }
+                            }
                         }),
                     ))
                     .child(Button::new_raw("Copy to clipboard", |x| {
