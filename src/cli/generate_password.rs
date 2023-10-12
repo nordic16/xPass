@@ -6,7 +6,7 @@ use cursive::{
 };
 
 use super::Screen;
-use crate::utils::construct_dialog;
+use crate::utils::{construct_dialog, crypto};
 use rand::{rngs::OsRng, Rng};
 
 pub struct GeneratePasswordScreen;
@@ -23,7 +23,8 @@ impl Screen for GeneratePasswordScreen {
                 HideableView::new(TextView::new("generating password...").h_align(cursive::align::HAlign::Center))
                     .hidden()
                     .with_name("gen_password"),
-            ))
+            )).child(HideableView::new(TextView::new("Entropy")
+                    .h_align(cursive::align::HAlign::Center)).hidden().with_name("entropy"))
             .child(
                 LinearLayout::new(Orientation::Horizontal)
                     .child(PaddedView::lrtb(
@@ -33,12 +34,20 @@ impl Screen for GeneratePasswordScreen {
                         0,
                         Button::new_raw("Generate Password", |x| {
                             let mut passref = x.find_name::<HideableView<TextView>>("gen_password").unwrap();
+                            let mut entropyref = x.find_name::<HideableView<TextView>>("entropy").unwrap();
+
+                            entropyref.set_visible(true);
                             passref.set_visible(true);
 
                             // Displays the newly generated password to the user.
+                            let password = GeneratePasswordScreen::gen_secure_password(16);
+
                             passref
                                 .get_inner_mut()
-                                .set_content(GeneratePasswordScreen::gen_secure_password(16));
+                                .set_content(&password);
+                            
+                            
+                            entropyref.get_inner_mut().set_content(format!("Password entropy: {}", crypto::calculate_password_entropy(&password)));
                         }),
                     ))
                     .child(Button::new_raw("Copy to clipboard", |x| {
