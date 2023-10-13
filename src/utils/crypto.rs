@@ -36,26 +36,21 @@ pub fn calculate_password_entropy(password: &str) -> f32 {
 /// This function probably sucks. Refactor it some day.
 fn calculate_password_pool(password: &str) -> i32 {
     let mut pool = 0;
-    
-    // character ranges
-    let minescules = ['a'..'z'];
-    let capitals = ['A'..'Z'];
-    let numbers = ['0'..'9'];
-    let digits = [['!'..'/'], [':'..'@'], ['['..'`'], ['{'..'~']];
 
-    if password.chars().any(|f| matches!(f, minescules)) {
+    if password.chars().any(|f| matches!(f, 'a'..='z')) {
         pool += 26;
     }
 
-    if password.chars().any(|f| matches!(f, capitals)) {
+    if password.chars().any(|f| matches!(f, 'A'..='Z')) {
         pool += 26;
     }
 
-    if password.chars().any(|f| matches!(f, numbers)) {
+    if password.chars().any(|f| matches!(f, '0'..='9')) {
         pool += 10;
     }
 
-    if password.chars().any(|f| matches!(f, digits)) {
+    // Bunch of special characters, i know...
+    if password.chars().any(|f| matches!(f, '!'..='/' | ':'..='@' | '['..='`' | '{'..='~')) {
         pool += 32;
     }
 

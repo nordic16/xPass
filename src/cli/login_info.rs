@@ -1,7 +1,4 @@
-use std::ops::Index;
-
-use cursive::{views::{TextView, Dialog}, logger::log};
-
+use cursive::views::TextView;
 use crate::utils::{construct_dialog, crypto::decrypt, login::Login, user_config::UserConfig};
 
 pub struct LoginInfoScreen;

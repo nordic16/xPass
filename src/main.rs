@@ -1,6 +1,8 @@
 mod app;
 mod cli;
 mod utils;
+
+#[cfg(test)]
 mod tests;
 
 use std::error::Error;

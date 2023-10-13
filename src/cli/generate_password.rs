@@ -2,7 +2,7 @@ use clipboard::{ClipboardContext, ClipboardProvider};
 use cursive::{
     direction::Orientation,
     traits::Nameable,
-    views::{Button, HideableView, LinearLayout, PaddedView, TextView, EditView, ListView, ResizedView, TextArea, ViewRef},
+    views::{Button, HideableView, LinearLayout, PaddedView, TextView, ListView, ResizedView, TextArea, ViewRef},
 };
 
 use super::Screen;
