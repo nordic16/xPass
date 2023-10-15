@@ -83,7 +83,7 @@ impl GeneratePasswordScreen {
         let mut rng = OsRng::default();
 
         // Does some magic :troll:
-        (0..len).for_each(|f| {
+        for f in 0..len {
             let mut ch = rng.gen_range(min_bound..min_bound + (max_bound - min_bound) - f as u8) as char;
 
             // Brute forcing is not very efficient, but it'll do for now.
@@ -91,7 +91,7 @@ impl GeneratePasswordScreen {
                 ch = rng.gen_range(min_bound..min_bound + (max_bound - min_bound) - f as u8) as char;
             }
             password.push(ch);
-        });
+        };
 
         password.into_iter().collect()
     }

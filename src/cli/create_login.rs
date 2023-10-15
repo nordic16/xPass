@@ -1,45 +1,72 @@
+
 use super::Screen;
+use super::generate_password::GeneratePasswordScreen;
+use crate::utils::crypto::calculate_password_entropy;
 use crate::utils::login::Login;
 use crate::utils::user_config::UserConfig;
 use crate::utils::{construct_dialog, crypto};
 use cursive::traits::Nameable;
-use cursive::views::{Dialog, EditView, ListView, TextView, ViewRef};
+use cursive::views::{Dialog, EditView, ListView, TextView, ViewRef, ResizedView, LinearLayout, HideableView};
 use cursive::Cursive;
+use rand::{self, thread_rng, Rng};
 
 pub struct CreateLoginScreen;
 
 impl Screen for CreateLoginScreen {
     fn draw_window(cursive: &mut Cursive) {
-        let view = Dialog::new()
-            .title("Create a new login")
-            .content(ListView::new()
+        let view = ResizedView::with_fixed_width(60, LinearLayout::new(cursive::direction::Orientation::Vertical)
+            .child(Dialog::new()
+                .title("Create a new login")
+                .content(ListView::new()
                     .child("Name:", EditView::new().with_name("name"))
                     .child("Username: ", EditView::new().with_name("username"))
-                    .child("Password: ", EditView::new().secret().with_name("password")),
-            )
-            .dismiss_button("Cancel")
-            .button("Create login", |x| {
-                //... create password
-                let username: ViewRef<EditView> = x.find_name("username").unwrap();
-                let password: ViewRef<EditView> = x.find_name("password").unwrap();
-                let name: ViewRef<EditView> = x.find_name("name").unwrap();
+                    .child("Password: ", EditView::new().secret().with_name("password")))
+                    
+                .button("Generate secure password", |x| {
+                    let mut passwordref: ViewRef<EditView> = x.find_name("password").unwrap();
+                    let mut passwordlen_ref: ViewRef<HideableView<TextView>> = x.find_name("passwordlen").unwrap();
+                    let mut password_entropyref: ViewRef<HideableView<TextView>> = x.find_name("password_entropy").unwrap();
 
-                CreateLoginScreen::create_password(
-                    username.get_content().as_str(),
-                    password.get_content().as_str(),
-                    name.get_content().as_str(),
+                    let len = thread_rng().gen_range(16..50);
+                    let password = GeneratePasswordScreen::gen_secure_password(len);
+                    
+                    passwordref.set_content(&password);  
+                    passwordlen_ref.get_inner_mut().set_content(format!("{}", len));  
+                    password_entropyref.get_inner_mut().set_content(format!("{} bits", calculate_password_entropy(&password)));
+                   
+                    // Display attributes to the user.
+                    passwordlen_ref.set_visible(true);
+                    password_entropyref.set_visible(true);
+
+                })
+
+                // TODO: FIX UNINTENDED BEHAVIOR.
+                .dismiss_button("Cancel")
+                .button("Create login", |x| {
+                    //... create password
+                    let usernameref: ViewRef<EditView> = x.find_name("username").unwrap();
+                    let passwordref: ViewRef<EditView> = x.find_name("password").unwrap();
+                    let nameref: ViewRef<EditView> = x.find_name("name").unwrap();
+
+                    CreateLoginScreen::create_password(usernameref.get_content().as_str(), 
+                    passwordref.get_content().as_str(),
+                        nameref.get_content().as_str(),
                     x,
-                );
+                    );
 
-                x.add_layer(construct_dialog(
-                    "Success!",
-                    TextView::new("Password has been encrypted and stored successfully!"),
-                    |x| {
-                        x.pop_layer();
-                        x.pop_layer();
-                    },
-                ));
-            });
+                    x.add_layer(construct_dialog(
+                        "Success!",
+                        TextView::new("Password has been encrypted and stored successfully!"),
+                        |x| {
+                            x.pop_layer();
+                            x.pop_layer();
+                        },
+                    ));
+            
+            })).child(ListView::new() // Password attrs
+                    .child("Pasword length: ", HideableView::new(TextView::new("")).with_name("passwordlen"))
+                    .child("Password entropy", HideableView::new(TextView::new("")).with_name("password_entropy"))
+            ));
 
         cursive.add_layer(view);
     }
