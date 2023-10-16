@@ -1,10 +1,9 @@
 
 use super::Screen;
-use super::generate_password::GeneratePasswordScreen;
-use crate::utils::crypto::calculate_password_entropy;
+use crate::utils::crypto;
 use crate::utils::login::Login;
 use crate::utils::user_config::UserConfig;
-use crate::utils::{construct_dialog, crypto};
+use crate::utils::construct_dialog;
 use cursive::traits::Nameable;
 use cursive::views::{Dialog, EditView, ListView, TextView, ViewRef, ResizedView, LinearLayout, HideableView};
 use cursive::Cursive;
@@ -28,11 +27,11 @@ impl Screen for CreateLoginScreen {
                     let mut password_entropyref: ViewRef<HideableView<TextView>> = x.find_name("password_entropy").unwrap();
 
                     let len = thread_rng().gen_range(16..50);
-                    let password = GeneratePasswordScreen::gen_secure_password(len);
+                    let password = crypto::gen_secure_password(len);
                     
                     passwordref.set_content(&password);  
                     passwordlen_ref.get_inner_mut().set_content(format!("{}", len));  
-                    password_entropyref.get_inner_mut().set_content(format!("{} bits", calculate_password_entropy(&password)));
+                    password_entropyref.get_inner_mut().set_content(format!("{} bits", crypto::calculate_password_entropy(&password)));
                    
                     // Display attributes to the user.
                     passwordlen_ref.set_visible(true);

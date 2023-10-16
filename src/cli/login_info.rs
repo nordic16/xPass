@@ -1,3 +1,4 @@
+use clipboard::{ClipboardContext, ClipboardProvider};
 use cursive::views::TextView;
 use crate::utils::{construct_dialog, crypto::decrypt, login::Login, user_config::UserConfig};
 
@@ -9,15 +10,33 @@ impl LoginInfoScreen {
     pub fn draw_window(cursive: &mut cursive::Cursive, login: &Login) {
         // Formats the content nicely.
         let key = &cursive.user_data::<UserConfig>().unwrap().master_password;
+        let decrypted_password = decrypt(&login.password, key);
+
         let content = format!(
             "Name: {}\nUsername: {}\nPassword: {}",
             &login.name,
             &login.username,
-            decrypt(&login.password, key)
+            &decrypted_password        
         );
 
         let mut dialog = construct_dialog("Info", TextView::new(&content), |x| {
             x.pop_layer();
+        });
+
+
+        // more messy code...
+        dialog.add_button("Copy to clipboard", move |x| {
+            let mut clipboard: ClipboardContext = ClipboardProvider::new().unwrap();
+
+            if let Ok(_) = clipboard.set_contents(String::from(&decrypted_password)) {
+                x.add_layer(construct_dialog(
+                    "Success!",
+                    TextView::new("Password has been copied to the clipboard."),
+                    |x| {
+                        x.pop_layer();
+                    },
+                ));
+            }
         });
 
         // This is some messy code right here...

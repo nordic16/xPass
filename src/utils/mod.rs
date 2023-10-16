@@ -1,5 +1,6 @@
 use cursive::{views::Dialog, Cursive, View};
 
+/// Useful cryptography-related stuff
 pub mod crypto;
 /// Contains methods useful for retrieving stuff from the config.
 pub mod login;

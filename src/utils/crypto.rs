@@ -1,5 +1,5 @@
 use magic_crypt::{new_magic_crypt, MagicCryptTrait};
-use rand::rngs::OsRng;
+use rand::{rngs::OsRng, Rng};
 use scrypt::{
     password_hash::{PasswordHasher, SaltString},
     Scrypt,
@@ -9,6 +9,30 @@ use scrypt::{
 pub fn encrypt(val: &str, key: &str) -> String {
     let mc = new_magic_crypt!(key, 256);
     mc.encrypt_to_base64(val)
+}
+
+   /// Generates a *possibly secure* password.
+pub fn gen_secure_password(len: usize) -> String {
+    let min_bound = 33u8; // Equivalent of '!'
+    let max_bound = 126u8; // Equivalent of '~'
+
+    let invalid_characters = vec!['\'', '`', '´', '\"', '{', '}'];
+
+    let mut password = Vec::<char>::with_capacity(len + 1);
+    let mut rng = OsRng::default();
+
+    // Does some magic :troll:
+    for f in 0..len {
+        let mut ch = rng.gen_range(min_bound..min_bound + (max_bound - min_bound) - f as u8) as char;
+
+        // Brute forcing is not very efficient, but it'll do for now.
+        while invalid_characters.contains(&ch) {
+            ch = rng.gen_range(min_bound..min_bound + (max_bound - min_bound) - f as u8) as char;
+        }
+        password.push(ch);
+    };
+
+    password.into_iter().collect()
 }
 
 /// Returns the decrypted cipher.

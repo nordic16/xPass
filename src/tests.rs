@@ -1,6 +1,5 @@
 use scrypt::password_hash::{PasswordHash, PasswordVerifier};
 use scrypt::Scrypt;
-use crate::cli::generate_password::GeneratePasswordScreen;
 use crate::utils::crypto;
 use std::time::{Duration, Instant};
 
@@ -14,7 +13,7 @@ fn test_password_generator() {
     let time = Instant::now();
 
     for i in 0..num {
-        let password = GeneratePasswordScreen::gen_secure_password(len);
+        let password = crypto::gen_secure_password(len);
         println!("Attempt {}: {} | length: {} | entropy: {}", (i + 1), password, password.len(), crypto::calculate_password_entropy(&password));
     }
 

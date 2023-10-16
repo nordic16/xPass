@@ -7,8 +7,6 @@ use cursive::{
 
 use super::Screen;
 use crate::utils::{construct_dialog, crypto};
-use rand::{rngs::OsRng, Rng};
-
 pub struct GeneratePasswordScreen;
 
 impl Screen for GeneratePasswordScreen {
@@ -40,7 +38,7 @@ impl Screen for GeneratePasswordScreen {
                             
                                 // these constraints might change one day (except for the 0 one ofc, no password can have a negative length.)
                                 if len < 50 && len > 0 {
-                                    let password = GeneratePasswordScreen::gen_secure_password(len as usize);
+                                    let password = crypto::gen_secure_password(len as usize);
 
                                     // Displays the newly generated password to the user.
                                     passref.get_inner_mut().set_content(&password);
@@ -68,31 +66,5 @@ impl Screen for GeneratePasswordScreen {
         cursive.add_layer(construct_dialog("Generate password", content, |x| {
             x.pop_layer();
         }));
-    }
-}
-
-impl GeneratePasswordScreen {
-    /// Generates a *possibly secure* password.
-    pub fn gen_secure_password(len: usize) -> String {
-        let min_bound = 33u8; // Equivalent of '!'
-        let max_bound = 126u8; // Equivalent of '~'
-
-        let invalid_characters = vec!['\'', '`', '´', '\"', '{', '}'];
-
-        let mut password = Vec::<char>::with_capacity(len + 1);
-        let mut rng = OsRng::default();
-
-        // Does some magic :troll:
-        for f in 0..len {
-            let mut ch = rng.gen_range(min_bound..min_bound + (max_bound - min_bound) - f as u8) as char;
-
-            // Brute forcing is not very efficient, but it'll do for now.
-            while invalid_characters.contains(&ch) {
-                ch = rng.gen_range(min_bound..min_bound + (max_bound - min_bound) - f as u8) as char;
-            }
-            password.push(ch);
-        };
-
-        password.into_iter().collect()
     }
 }
