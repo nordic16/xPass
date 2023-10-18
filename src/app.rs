@@ -60,26 +60,25 @@ impl App {
 
             // If password matches the one previously set by the user draw the main menu screen and remove everything else.
             if password.get_content().to_string() == cfg.master_password {
-                x.add_layer(construct_dialog("Success!", TextView::new("Login successful!"), |x| {
-                    x.pop_layer();
-                    x.pop_layer();
+                x.add_layer(construct_dialog("Success!", TextView::new("Login successful!"))
+                    .button("Ok", |x| {
+                        x.pop_layer();
+                        x.pop_layer();
 
-                    App::draw_main_menu(x);
-                }));
+                        App::draw_main_menu(x);
+            }));
             } else {
                 password.set_content("");
 
                 x.add_layer(construct_dialog(
                     "Password is wrong!",
-                    TextView::new("Check your password and try again."),
-                    |x| {
-                        x.pop_layer();
-                    },
-                ));
+                    TextView::new("Check your password and try again.")
+                ).dismiss_button("Ok"));
             }
         };
 
-        cursive.add_layer(construct_dialog("Enter master password.", content, action));
+        cursive.add_layer(construct_dialog("Enter master password.", content)
+            .button("Confirm", action));
     }
 
     fn draw_main_menu(cursive: &mut Cursive) {
@@ -126,12 +125,13 @@ impl App {
             let c_password: ViewRef<EditView> = x.find_name("confirm_password").unwrap();
 
             if password.get_content() == c_password.get_content() && !password.get_content().is_empty() {
-                x.add_layer(construct_dialog("Success!", TextView::new("Password set!"), |cx| {
-                    cx.pop_layer();
-                    cx.pop_layer();
-
-                    App::draw_main_menu(cx);
-                }));
+                x.add_layer(construct_dialog("Success!", TextView::new("Password set!"))
+                    .button("Ok", |x| {
+                        x.pop_layer();
+                        x.pop_layer();
+    
+                        App::draw_main_menu(x);
+                    }));
 
                 // Actually sets the password.
                 x.with_user_data(|cfg: &mut UserConfig| cfg.master_password = password.get_content().to_string());
@@ -140,13 +140,11 @@ impl App {
             } else {
                 x.add_layer(construct_dialog(
                     "Error.",
-                    TextView::new("Make sure your passwords match!"),
-                    |x| {
-                        x.pop_layer();
-                    },
-                ));
+                    TextView::new("Make sure your passwords match!")
+                ).dismiss_button("Ok"));
             }
         };
-        cursive.add_layer(construct_dialog("Set a master password.", content, action));
+        cursive.add_layer(construct_dialog("Set a master password.", content)
+            .button("Confirm", action));
     }
 }

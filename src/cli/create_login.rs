@@ -20,7 +20,10 @@ impl Screen for CreateLoginScreen {
                     .child("Name:", EditView::new().with_name("name"))
                     .child("Username: ", EditView::new().with_name("username"))
                     .child("Password: ", EditView::new().secret().with_name("password")))
-                    
+
+                // TODO: FIX UNINTENDED BEHAVIOR.
+                .dismiss_button("Cancel")
+
                 .button("Generate secure password", |x| {
                     let mut passwordref: ViewRef<EditView> = x.find_name("password").unwrap();
                     let mut passwordlen_ref: ViewRef<HideableView<TextView>> = x.find_name("passwordlen").unwrap();
@@ -39,8 +42,6 @@ impl Screen for CreateLoginScreen {
 
                 })
 
-                // TODO: FIX UNINTENDED BEHAVIOR.
-                .dismiss_button("Cancel")
                 .button("Create login", |x| {
                     //... create password
                     let usernameref: ViewRef<EditView> = x.find_name("username").unwrap();
@@ -56,11 +57,10 @@ impl Screen for CreateLoginScreen {
                     x.add_layer(construct_dialog(
                         "Success!",
                         TextView::new("Password has been encrypted and stored successfully!"),
-                        |x| {
-                            x.pop_layer();
-                            x.pop_layer();
-                        },
-                    ));
+                    ).button("Ok", |x| {
+                        x.pop_layer();
+                        x.pop_layer();
+                    }));
             
             })).child(ListView::new() // Password attrs
                     .child("Pasword length: ", HideableView::new(TextView::new("")).with_name("passwordlen"))

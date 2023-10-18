@@ -47,24 +47,19 @@ impl Screen for GeneratePasswordScreen {
                             }
                         }),
                     ))
-                    .child(Button::new_raw("Copy to clipboard", |x| {
-                        let mut clipboard: ClipboardContext = ClipboardProvider::new().unwrap();
-                        let passref = x.find_name::<HideableView<TextView>>("gen_password").unwrap();
+                    .child(PaddedView::lrtb(0, 2, 0, 0,
+                        Button::new_raw("Copy to clipboard", |x| {
+                                let mut clipboard: ClipboardContext = ClipboardProvider::new().unwrap();
+                                let passref = x.find_name::<HideableView<TextView>>("gen_password").unwrap();
 
-                        if let Ok(_) = clipboard.set_contents(String::from(passref.get_inner().get_content().source())) {
-                            x.add_layer(construct_dialog(
-                                "Success!",
-                                TextView::new("Password has been copied to the clipboard."),
-                                |x| {
-                                    x.pop_layer();
-                                },
-                            ));
-                        }
-                    })),
+                                if let Ok(_) = clipboard.set_contents(String::from(passref.get_inner().get_content().source())) {
+                                    x.add_layer(construct_dialog("Success!", TextView::new("Password has been copied to the clipboard.")
+                                    ).dismiss_button("Ok"));
+                                }
+                    })))
+                    .child(Button::new_raw("Ok", |x| { x.pop_layer(); }))
             );
 
-        cursive.add_layer(construct_dialog("Generate password", content, |x| {
-            x.pop_layer();
-        }));
+        cursive.add_layer(construct_dialog("Generate password", content));
     }
 }
