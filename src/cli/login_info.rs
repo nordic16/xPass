@@ -13,7 +13,7 @@ impl LoginInfoScreen {
         let decrypted_password = decrypt(&login.password, key);
         let login1 = login.clone();
 
-        let login_fields = construct_dialog("Info", ListView::new()
+        let dialog_view = construct_dialog("Info", ListView::new()
             .child("Name:", EditView::new().content(&login.name))
             .child("Username:", EditView::new().content(&login.username))
             .child("Password:", EditView::new().content(&login.password)))
@@ -30,19 +30,23 @@ impl LoginInfoScreen {
                 x.with_user_data(|cfg: &mut UserConfig| {
                     // Removes the selected password from the list.
                     cfg.logins.remove(cfg.logins.iter().position(|c| c.name == login1.name).unwrap());
-                    let mut dialog = construct_dialog("Password deleted successfully!", TextView::new("Press ok to go back"));
-                    
-                    dialog.add_button("Ok", |x| {
-                        x.pop_layer();
-                        x.pop_layer();
-                        x.pop_layer();
-                        ListLoginsScreen::draw_window(x);
-                })});
-            })
-            .dismiss_button("Ok");
+                    });
+                
+                x.add_layer(construct_dialog("Password deleted successfully!", TextView::new("Press ok to go back"))
+                    .button("Ok", |y| {
+                        y.pop_layer();
+                        y.pop_layer();
+                        y.pop_layer();
+                        ListLoginsScreen::draw_window(y);
+                    }));
+                
+                }
+            ).button("Ok", |x| {
+                x.add_layer(
+                    construct_dialog("Not implemented", TextView::new("Feature is not implemented.")).dismiss_button("Ok"))});
             
       
-        cursive.add_layer(login_fields);
+        cursive.add_layer(dialog_view);
         
     }
 }
