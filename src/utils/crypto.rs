@@ -11,7 +11,8 @@ pub fn encrypt(val: &str, key: &str) -> String {
     mc.encrypt_to_base64(val)
 }
 
-   /// Generates a *possibly secure* password.
+
+/// Generates a *possibly secure* password.
 pub fn gen_secure_password(len: usize) -> String {
     let min_bound = 33u8; // Equivalent of '!'
     let max_bound = 126u8; // Equivalent of '~'
@@ -19,7 +20,7 @@ pub fn gen_secure_password(len: usize) -> String {
     let invalid_characters = ['\'', '`', '´', '\"', '{', '}'];
 
     let mut password = Vec::<char>::with_capacity(len + 1);
-    let mut rng = OsRng::default();
+    let mut rng = OsRng;
 
     // Does some magic :troll:
     for f in 0..len {
@@ -35,11 +36,13 @@ pub fn gen_secure_password(len: usize) -> String {
     password.into_iter().collect()
 }
 
+
 /// Returns the decrypted cipher.
 pub fn decrypt(cipher: &str, key: &str) -> String {
     let mc = new_magic_crypt!(key, 256);
     mc.decrypt_base64_to_string(cipher).unwrap()
 }
+
 
 /// Computes the hash of the given T.
 /// NOTE: THIS IS WAY TOO SLOW: TAKES MORE THAN 10 seconds.
@@ -50,10 +53,10 @@ pub fn calculate_hash(password: &str) -> String {
 
 
 pub fn calculate_password_entropy(password: &str) -> f32 {
-    let len = password.len() as i32;
+    let len = password.len() as f32;
     let pool = calculate_password_pool(password);
 
-    return len as f32 * (pool as f32).log2();
+    return len * (pool as f32).log2();
 }
 
 
