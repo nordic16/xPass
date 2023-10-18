@@ -52,7 +52,7 @@ impl Screen for GeneratePasswordScreen {
                                 let mut clipboard: ClipboardContext = ClipboardProvider::new().unwrap();
                                 let passref = x.find_name::<HideableView<TextView>>("gen_password").unwrap();
 
-                                if let Ok(_) = clipboard.set_contents(String::from(passref.get_inner().get_content().source())) {
+                                if clipboard.set_contents(String::from(passref.get_inner().get_content().source())).is_ok() {
                                     x.add_layer(construct_dialog("Success!", TextView::new("Password has been copied to the clipboard.")
                                     ).dismiss_button("Ok"));
                                 }

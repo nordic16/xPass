@@ -16,7 +16,7 @@ pub fn gen_secure_password(len: usize) -> String {
     let min_bound = 33u8; // Equivalent of '!'
     let max_bound = 126u8; // Equivalent of '~'
 
-    let invalid_characters = vec!['\'', '`', '´', '\"', '{', '}'];
+    let invalid_characters = ['\'', '`', '´', '\"', '{', '}'];
 
     let mut password = Vec::<char>::with_capacity(len + 1);
     let mut rng = OsRng::default();
@@ -61,15 +61,15 @@ pub fn calculate_password_entropy(password: &str) -> f32 {
 fn calculate_password_pool(password: &str) -> i32 {
     let mut pool = 0;
 
-    if password.chars().any(|f| matches!(f, 'a'..='z')) {
+    if password.chars().any(|f| f.is_ascii_lowercase()) {
         pool += 26;
     }
 
-    if password.chars().any(|f| matches!(f, 'A'..='Z')) {
+    if password.chars().any(|f| f.is_ascii_uppercase()) {
         pool += 26;
     }
 
-    if password.chars().any(|f| matches!(f, '0'..='9')) {
+    if password.chars().any(|f| f.is_ascii_digit()) {
         pool += 10;
     }
 

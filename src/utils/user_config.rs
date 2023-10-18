@@ -1,17 +1,9 @@
 use super::login::Login;
 use serde::{Deserialize, Serialize};
+use std::default::Default;
 
-#[derive(Serialize, Deserialize, Clone, Debug)]
+#[derive(Serialize, Deserialize, Clone, Debug, Default)]
 pub struct UserConfig {
     pub master_password: String,
     pub logins: Vec<Login>,
-}
-
-impl std::default::Default for UserConfig {
-    fn default() -> Self {
-        Self {
-            logins: Vec::<Login>::new(),
-            master_password: String::from(""),
-        }
-    }
 }
