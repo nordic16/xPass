@@ -1,6 +1,7 @@
-use scrypt::password_hash::{PasswordHash, PasswordVerifier};
-use scrypt::Scrypt;
 use crate::utils::crypto;
+use scrypt::{
+    password_hash::{PasswordHash, PasswordVerifier}, Scrypt
+};
 use std::time::{Duration, Instant};
 
 #[test]
@@ -14,13 +15,23 @@ fn test_password_generator() {
 
     for i in 0..num {
         let password = crypto::gen_secure_password(len);
-        println!("Attempt {}: {} | length: {} | entropy: {}", (i + 1), password, password.len(), crypto::calculate_password_entropy(&password));
+        println!(
+            "Attempt {}: {} | length: {} | entropy: {}",
+            (i + 1),
+            password,
+            password.len(),
+            crypto::calculate_password_entropy(&password)
+        );
     }
 
     let elapsed_time = Instant::now() - time;
 
     // yeah, microseconds, because 10^-3 just ain't enough lmao
-    println!("\nIt took {:?} microseconds to generate {} passwords", Duration::as_micros(&elapsed_time), num);
+    println!(
+        "\nIt took {:?} microseconds to generate {} passwords",
+        Duration::as_micros(&elapsed_time),
+        num
+    );
 }
 
 #[test]
@@ -38,10 +49,14 @@ fn test_calculate_hash() {
     println!("Hash: {:?}", parsed_hash.hash);
 
     // makes sure the hash was correctly generated.
-    assert!(Scrypt.verify_password(password.as_bytes(), &parsed_hash).is_ok());
+    assert!(Scrypt
+        .verify_password(password.as_bytes(), &parsed_hash)
+        .is_ok());
 
     let elapsed_time = Instant::now() - time;
-    
-    println!("It took {:?}ms to generate the correct hash for the given password", elapsed_time.as_millis());
-}
 
+    println!(
+        "It took {:?}ms to generate the correct hash for the given password",
+        elapsed_time.as_millis()
+    );
+}

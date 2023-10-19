@@ -1,17 +1,13 @@
-use crate::DEBUG;
-use crate::cli::generate_password::GeneratePasswordScreen;
-use crate::cli::Screen;
-use crate::cli::{create_login::CreateLoginScreen, list_logins::ListLoginsScreen};
-use crate::utils::construct_dialog;
-use crate::utils::user_config::UserConfig;
-use cursive::direction::Orientation;
-use cursive::event::Key;
-use cursive::theme::Color;
-use cursive::theme::PaletteColor::{Background, Primary, Shadow, View};
-use cursive::traits::{Nameable, Resizable};
-use cursive::views::{Button, Dialog, EditView, LinearLayout, ListView, Panel, TextView, ViewRef};
-use cursive::CursiveExt;
-use cursive::{theme::Theme, Cursive};
+use crate::{
+    cli::{
+        create_login::CreateLoginScreen, generate_password::GeneratePasswordScreen, list_logins::ListLoginsScreen, Screen
+    }, utils::{construct_dialog, user_config::UserConfig}, DEBUG
+};
+use cursive::{
+    direction::Orientation, event::Key, theme::{
+        Color, PaletteColor::{Background, Primary, Shadow, View}, Theme
+    }, traits::{Nameable, Resizable}, views::{Button, EditView, LinearLayout, ListView, Panel, TextView, ViewRef}, Cursive, CursiveExt
+};
 
 pub struct App {
     pub cursive: Cursive,
@@ -39,7 +35,8 @@ impl App {
         // Unset password: Must set a new one.
         if app_data.master_password.is_empty() {
             App::draw_masterpassword_screen(&mut self.cursive);
-        } else if !DEBUG { // in case i'm debugging.
+        } else if !DEBUG {
+            // in case i'm debugging.
             App::draw_login_screen(&mut self.cursive);
         } else {
             App::draw_main_menu(&mut self.cursive);
@@ -58,27 +55,36 @@ impl App {
             let mut password: ViewRef<EditView> = x.find_name("password").unwrap();
             let cfg = x.user_data::<UserConfig>().unwrap();
 
-            // If password matches the one previously set by the user draw the main menu screen and remove everything else.
+            // If password matches the one previously set by the user draw the main menu screen and
+            // remove everything else.
             if password.get_content().to_string() == cfg.master_password {
-                x.add_layer(construct_dialog("Success!", TextView::new("Login successful!"))
-                    .button("Ok", |x| {
-                        x.pop_layer();
-                        x.pop_layer();
+                x.add_layer(
+                    construct_dialog("Success!", TextView::new("Login successful!")).button(
+                        "Ok",
+                        |x| {
+                            x.pop_layer();
+                            x.pop_layer();
 
-                        App::draw_main_menu(x);
-            }));
+                            App::draw_main_menu(x);
+                        },
+                    ),
+                );
             } else {
                 password.set_content("");
 
-                x.add_layer(construct_dialog(
-                    "Password is wrong!",
-                    TextView::new("Check your password and try again.")
-                ).dismiss_button("Ok"));
+                x.add_layer(
+                    construct_dialog(
+                        "Password is wrong!",
+                        TextView::new("Check your password and try again."),
+                    )
+                    .dismiss_button("Ok"),
+                );
             }
         };
 
-        cursive.add_layer(construct_dialog("Enter master password.", content)
-            .button("Confirm", action));
+        cursive.add_layer(
+            construct_dialog("Enter master password.", content).button("Confirm", action),
+        );
     }
 
     fn draw_main_menu(cursive: &mut Cursive) {
@@ -95,7 +101,10 @@ impl App {
                 }))
                 .child(Button::new_raw("Clear passwords", |q| {
                     q.with_user_data(|cfg: &mut UserConfig| cfg.logins.clear());
-                    Dialog::info("Passwords cleared!");
+                    q.add_layer(
+                        construct_dialog("Success!", TextView::new("Passwords cleared!"))
+                            .dismiss_button("Ok"),
+                    );
                 })),
         )
         .title("xPass");
@@ -116,7 +125,10 @@ impl App {
     fn draw_masterpassword_screen(cursive: &mut Cursive) {
         let content = ListView::new()
             .child("Password", EditView::new().secret().with_name("password"))
-            .child("Confirm Password", EditView::new().secret().with_name("confirm_password"))
+            .child(
+                "Confirm Password",
+                EditView::new().secret().with_name("confirm_password"),
+            )
             .min_width(35);
 
         // Closure that will be executed when the user presses ok.
@@ -124,27 +136,36 @@ impl App {
             let password: ViewRef<EditView> = x.find_name("password").unwrap();
             let c_password: ViewRef<EditView> = x.find_name("confirm_password").unwrap();
 
-            if password.get_content() == c_password.get_content() && !password.get_content().is_empty() {
-                x.add_layer(construct_dialog("Success!", TextView::new("Password set!"))
-                    .button("Ok", |x| {
-                        x.pop_layer();
-                        x.pop_layer();
-    
-                        App::draw_main_menu(x);
-                    }));
+            if password.get_content() == c_password.get_content()
+                && !password.get_content().is_empty()
+            {
+                x.add_layer(
+                    construct_dialog("Success!", TextView::new("Password set!")).button(
+                        "Ok",
+                        |x| {
+                            x.pop_layer();
+                            x.pop_layer();
+
+                            App::draw_main_menu(x);
+                        },
+                    ),
+                );
 
                 // Actually sets the password.
-                x.with_user_data(|cfg: &mut UserConfig| cfg.master_password = password.get_content().to_string());
+                x.with_user_data(|cfg: &mut UserConfig| {
+                    cfg.master_password = password.get_content().to_string()
+                });
 
             // Invalid password.
             } else {
-                x.add_layer(construct_dialog(
-                    "Error.",
-                    TextView::new("Make sure your passwords match!")
-                ).dismiss_button("Ok"));
+                x.add_layer(
+                    construct_dialog("Error.", TextView::new("Make sure your passwords match!"))
+                        .dismiss_button("Ok"),
+                );
             }
         };
-        cursive.add_layer(construct_dialog("Set a master password.", content)
-            .button("Confirm", action));
+        cursive.add_layer(
+            construct_dialog("Set a master password.", content).button("Confirm", action),
+        );
     }
 }
