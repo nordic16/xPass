@@ -14,7 +14,7 @@ fn test_password_generator() {
     let time = Instant::now();
 
     for i in 0..num {
-        let password = crypto::gen_secure_password(len);
+        let password = crypto::gen_secure_password(len, false);
         println!(
             "Attempt {}: {} | length: {} | entropy: {}",
             (i + 1),

@@ -11,14 +11,25 @@ pub fn encrypt(val: &str, key: &str) -> String {
 }
 
 /// Generates a *possibly secure* password.
-pub fn gen_secure_password(len: usize) -> String {
-    let min_bound = 33u8; // Equivalent of '!'
-    let max_bound = 126u8; // Equivalent of '~'
+pub fn gen_secure_password(len: usize, special_chars: bool) -> String {
+    let mut min_bound = 33u8; // Equivalent of '!'
+    let mut max_bound = 126u8; // Equivalent of '~'
 
-    let invalid_characters = ['\'', '`', '´', '\"', '{', '}'];
+
+    let mut invalid_characters: Vec<char> = vec!['\'', '`', '´', '\"'];
 
     let mut password = Vec::<char>::with_capacity(len + 1);
     let mut rng = OsRng;
+
+    if !special_chars {
+        min_bound = 48u8; // 0
+        max_bound = 122u8; // Z
+
+        // TODO: this code can probably be optimized
+        let mut new_invalid = (':'..'@').collect::<Vec<_>>();
+        new_invalid.extend(('['..'`').collect::<Vec<_>>());
+        invalid_characters.append(&mut new_invalid);
+    }
 
     // Does some magic :troll:
     for f in 0..len {

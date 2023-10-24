@@ -62,7 +62,7 @@ impl Screen for GeneratePasswordScreen {
                                 // these constraints might change one day (except for the 0 one ofc,
                                 // no password can have a negative length.)
                                 if len < 50 && len > 0 {
-                                    let password = crypto::gen_secure_password(len as usize);
+                                    let password = crypto::gen_secure_password(len as usize, true);
 
                                     // Displays the newly generated password to the user.
                                     passref.get_inner_mut().set_content(&password);

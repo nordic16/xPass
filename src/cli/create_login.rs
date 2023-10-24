@@ -37,7 +37,7 @@ impl Screen for CreateLoginScreen {
                                 x.find_name("password_entropy").unwrap();
 
                             let len = thread_rng().gen_range(16..50);
-                            let password = crypto::gen_secure_password(len);
+                            let password = crypto::gen_secure_password(len, true);
 
                             passwordref.set_content(&password);
                             passwordlen_ref
