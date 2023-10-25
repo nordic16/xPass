@@ -1,9 +1,12 @@
 use super::Screen;
 use crate::utils::{construct_dialog, crypto, login::Login, user_config::UserConfig};
 use cursive::{
-    traits::Nameable, views::{
-        Dialog, EditView, HideableView, LinearLayout, ListView, ResizedView, TextView, ViewRef
-    }, Cursive
+    traits::Nameable,
+    views::{
+        Checkbox, Dialog, EditView, HideableView, LinearLayout, ListView, ResizedView, TextView,
+        ViewRef,
+    },
+    Cursive,
 };
 use rand::{self, thread_rng, Rng};
 
@@ -21,36 +24,44 @@ impl Screen for CreateLoginScreen {
                             ListView::new()
                                 .child("Name:", EditView::new().with_name("name"))
                                 .child("Username: ", EditView::new().with_name("username"))
-                                .child(
-                                    "Password: ",
-                                    EditView::new().secret().with_name("password"),
-                                ),
+                                .child("Password: ", EditView::new().with_name("password"))
+                                .delimiter()
+                                .child("No chars", Checkbox::new().with_name("no_chars"))
+                                .child("No digits", Checkbox::new().with_name("no_digits")),
                         )
                         // TODO: FIX UNINTENDED BEHAVIOR.
                         .dismiss_button("Cancel")
                         .button("Generate secure password", |x| {
-                            let mut passwordref: ViewRef<EditView> =
+                            let mut password_ref: ViewRef<EditView> =
                                 x.find_name("password").unwrap();
-                            let mut passwordlen_ref: ViewRef<HideableView<TextView>> =
+                            /*
+                            let passwordlen_ref: ViewRef<HideableView<TextView>> =
                                 x.find_name("passwordlen").unwrap();
-                            let mut password_entropyref: ViewRef<HideableView<TextView>> =
+                            let password_entropy_ref: ViewRef<HideableView<TextView>> =
                                 x.find_name("password_entropy").unwrap();
+                                */
 
-                            let len = thread_rng().gen_range(16..50);
-                            let password = crypto::gen_secure_password(len, true);
+                            let no_chars_ref: ViewRef<Checkbox> = x.find_name("no_chars").unwrap();
+                            let password = crypto::gen_secure_password(
+                                thread_rng().gen_range(16..50),
+                                !no_chars_ref.is_checked(),
+                            );
 
-                            passwordref.set_content(&password);
+                            password_ref.set_content(&password);
+                            /*
                             passwordlen_ref
                                 .get_inner_mut()
                                 .set_content(format!("{}", len));
-                            password_entropyref.get_inner_mut().set_content(format!(
+
+                            password_entropy_ref.get_inner_mut().set_content(format!(
                                 "{} bits",
                                 crypto::calculate_password_entropy(&password)
                             ));
 
                             // Display attributes to the user.
                             passwordlen_ref.set_visible(true);
-                            password_entropyref.set_visible(true);
+                            password_entropy_ref.set_visible(true);
+                            */
                         })
                         .button("Create login", |x| {
                             //... create password

@@ -1,8 +1,11 @@
 use clipboard::{ClipboardContext, ClipboardProvider};
 use cursive::{
-    direction::Orientation, traits::Nameable, views::{
-        Button, HideableView, LinearLayout, ListView, PaddedView, ResizedView, TextArea, TextView, ViewRef
-    }
+    direction::Orientation,
+    traits::Nameable,
+    views::{
+        Button, HideableView, LinearLayout, ListView, PaddedView, ResizedView, TextArea, TextView,
+        ViewRef,
+    },
 };
 
 use super::Screen;

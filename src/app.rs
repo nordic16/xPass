@@ -1,12 +1,22 @@
 use crate::{
     cli::{
-        create_login::CreateLoginScreen, generate_password::GeneratePasswordScreen, list_logins::ListLoginsScreen, Screen
-    }, utils::{construct_dialog, user_config::UserConfig}, DEBUG
+        create_login::CreateLoginScreen, generate_password::GeneratePasswordScreen,
+        list_logins::ListLoginsScreen, Screen,
+    },
+    utils::{construct_dialog, user_config::UserConfig},
+    DEBUG,
 };
 use cursive::{
-    direction::Orientation, event::Key, theme::{
-        Color, PaletteColor::{Background, Primary, Shadow, View}, Theme
-    }, traits::{Nameable, Resizable}, views::{Button, EditView, LinearLayout, ListView, Panel, TextView, ViewRef}, Cursive, CursiveExt
+    direction::Orientation,
+    event::Key,
+    theme::{
+        Color,
+        PaletteColor::{Background, Primary, Shadow, View},
+        Theme,
+    },
+    traits::{Nameable, Resizable},
+    views::{Button, EditView, LinearLayout, ListView, Panel, TextView, ViewRef},
+    Cursive, CursiveExt,
 };
 
 pub struct App {

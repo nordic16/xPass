@@ -1,5 +1,8 @@
 use crate::utils::{
-    construct_dialog, crypto::{decrypt, encrypt}, login::Login, user_config::UserConfig
+    construct_dialog,
+    crypto::{decrypt, encrypt},
+    login::Login,
+    user_config::UserConfig,
 };
 use clipboard::{ClipboardContext, ClipboardProvider};
 use cursive::views::{EditView, ListView, NamedView, TextView};

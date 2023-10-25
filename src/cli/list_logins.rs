@@ -1,7 +1,9 @@
 use super::{login_info::LoginInfoScreen, Screen};
 use crate::utils::user_config::UserConfig;
 use cursive::{
-    traits::{Nameable, Resizable}, view::Margins, views::{Button, LinearLayout, PaddedView, Panel, ScrollView, TextView}
+    traits::{Nameable, Resizable},
+    view::Margins,
+    views::{Button, LinearLayout, PaddedView, Panel, ScrollView, TextView},
 };
 
 /// Lists all existing entries.

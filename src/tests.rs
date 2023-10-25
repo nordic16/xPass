@@ -1,6 +1,7 @@
 use crate::utils::crypto;
 use scrypt::{
-    password_hash::{PasswordHash, PasswordVerifier}, Scrypt
+    password_hash::{PasswordHash, PasswordVerifier},
+    Scrypt,
 };
 use std::time::{Duration, Instant};
 
