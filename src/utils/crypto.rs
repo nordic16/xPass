@@ -12,7 +12,7 @@ pub fn encrypt(val: &str, key: &str) -> String {
 }
 
 /// Generates a *possibly secure* password.
-pub fn gen_secure_password(len: usize, special_chars: bool) -> String {
+pub fn gen_secure_password(len: usize, special_chars: bool, numbers: bool) -> String {
     let mut min_bound = 33u8; // Equivalent of '!'
     let mut max_bound = 126u8; // Equivalent of '~'
 
@@ -29,6 +29,12 @@ pub fn gen_secure_password(len: usize, special_chars: bool) -> String {
         let mut new_invalid = (':'..='@').collect::<Vec<_>>();
         new_invalid.extend(('['..='`').collect::<Vec<_>>());
         invalid_characters.append(&mut new_invalid);
+    }
+
+    if !numbers {
+        // Since the ASCII table is a fucking mess, no bounds are updated here.
+        let mut nums = ('0'..='9').collect::<Vec<_>>();
+        invalid_characters.append(&mut nums);
     }
 
     // Does some magic :troll:

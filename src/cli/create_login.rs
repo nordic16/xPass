@@ -26,8 +26,8 @@ impl Screen for CreateLoginScreen {
                                 .child("Username: ", EditView::new().with_name("username"))
                                 .child("Password: ", EditView::new().with_name("password"))
                                 .delimiter()
-                                .child("No chars", Checkbox::new().with_name("no_chars"))
-                                .child("No digits", Checkbox::new().with_name("no_digits")),
+                                .child("No special chars", Checkbox::new().with_name("no_schars"))
+                                .child("No numbers", Checkbox::new().with_name("no_numbers")),
                         )
                         // TODO: FIX UNINTENDED BEHAVIOR.
                         .dismiss_button("Cancel")
@@ -41,10 +41,13 @@ impl Screen for CreateLoginScreen {
                                 x.find_name("password_entropy").unwrap();
                                 */
 
-                            let no_chars_ref: ViewRef<Checkbox> = x.find_name("no_chars").unwrap();
+                            let no_chars_ref: ViewRef<Checkbox> = x.find_name("no_schars").unwrap();
+                            let no_numbers_ref: ViewRef<Checkbox> = x.find_name("no_numbers").unwrap();
+                            
                             let password = crypto::gen_secure_password(
                                 thread_rng().gen_range(16..50),
                                 !no_chars_ref.is_checked(),
+                                               !no_numbers_ref.is_checked()
                             );
 
                             password_ref.set_content(&password);
