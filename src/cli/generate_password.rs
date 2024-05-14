@@ -1,15 +1,27 @@
-use clipboard::{ClipboardContext, ClipboardProvider};
+use super::Screen;
+use crate::utils::{
+    construct_dialog,
+    crypto,
+};
+use clipboard::{
+    ClipboardContext,
+    ClipboardProvider,
+};
 use cursive::{
     direction::Orientation,
     traits::Nameable,
     views::{
-        Button, HideableView, LinearLayout, ListView, PaddedView, ResizedView, TextArea, TextView,
+        Button,
+        HideableView,
+        LinearLayout,
+        ListView,
+        PaddedView,
+        ResizedView,
+        TextArea,
+        TextView,
         ViewRef,
     },
 };
-
-use super::Screen;
-use crate::utils::{construct_dialog, crypto};
 pub struct GeneratePasswordScreen;
 
 impl Screen for GeneratePasswordScreen {
@@ -48,24 +60,24 @@ impl Screen for GeneratePasswordScreen {
                         0,
                         0,
                         Button::new_raw("Generate Password", |x| {
-                            let mut passref = x
-                                .find_name::<HideableView<TextView>>("gen_password")
-                                .unwrap();
+                            let mut passref =
+                                x.find_name::<HideableView<TextView>>("gen_password").unwrap();
                             let mut entropyref =
                                 x.find_name::<HideableView<TextView>>("entropy").unwrap();
                             let lenref: ViewRef<TextArea> = x.find_name("password_len").unwrap();
 
+                            let content = lenref.get_content();
+
                             // Some dumbass might think it's a good idea to try to create a password
                             // with *no* length or with letters.
-                            if !lenref.get_content().is_empty()
-                                && lenref.get_content().parse::<i32>().is_ok()
-                            {
+                            if !content.is_empty() && content.parse::<i32>().is_ok() {
                                 let len = lenref.get_content().parse::<usize>().unwrap();
 
                                 // these constraints might change one day (except for the 0 one ofc,
                                 // no password can have a negative length.)
                                 if len < 50 && len > 0 {
-                                    let password = crypto::gen_secure_password(len as usize, true, true);
+                                    let password =
+                                        crypto::gen_secure_password(len as usize, true, true);
 
                                     // Displays the newly generated password to the user.
                                     passref.get_inner_mut().set_content(&password);
@@ -87,16 +99,12 @@ impl Screen for GeneratePasswordScreen {
                         0,
                         Button::new_raw("Copy to clipboard", |x| {
                             let mut clipboard: ClipboardContext = ClipboardProvider::new().unwrap();
-                            let passref = x
-                                .find_name::<HideableView<TextView>>("gen_password")
-                                .unwrap();
+                            let passref =
+                                x.find_name::<HideableView<TextView>>("gen_password").unwrap();
 
-                            if clipboard
-                                .set_contents(String::from(
-                                    passref.get_inner().get_content().source(),
-                                ))
-                                .is_ok()
-                            {
+                            let content = String::from(passref.get_inner().get_content().source());
+
+                            if clipboard.set_contents(content).is_ok() {
                                 x.add_layer(
                                     construct_dialog(
                                         "Success!",

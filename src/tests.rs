@@ -1,9 +1,15 @@
 use crate::utils::crypto;
 use scrypt::{
-    password_hash::{PasswordHash, PasswordVerifier},
+    password_hash::{
+        PasswordHash,
+        PasswordVerifier,
+    },
     Scrypt,
 };
-use std::time::{Duration, Instant};
+use std::time::{
+    Duration,
+    Instant,
+};
 
 #[test]
 /// Attempts to generate 32 passwords.
@@ -50,9 +56,7 @@ fn test_calculate_hash() {
     println!("Hash: {:?}", parsed_hash.hash);
 
     // makes sure the hash was correctly generated.
-    assert!(Scrypt
-        .verify_password(password.as_bytes(), &parsed_hash)
-        .is_ok());
+    assert!(Scrypt.verify_password(password.as_bytes(), &parsed_hash).is_ok());
 
     let elapsed_time = Instant::now() - time;
 

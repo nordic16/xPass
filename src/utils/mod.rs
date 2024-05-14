@@ -1,4 +1,7 @@
-use cursive::{views::Dialog, View};
+use cursive::{
+    views::Dialog,
+    View,
+};
 
 /// Useful cryptography-related stuff
 pub mod crypto;
@@ -13,8 +16,5 @@ where
     T: View,
     // C: Fn(&mut Cursive) + 'static,
 {
-    Dialog::new()
-        .title(title)
-        .content(content)
-        .padding_lrtb(2, 2, 1, 1)
+    Dialog::new().title(title).content(content).padding_lrtb(2, 2, 1, 1)
 }

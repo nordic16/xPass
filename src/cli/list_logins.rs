@@ -1,9 +1,22 @@
-use super::{login_info::LoginInfoScreen, Screen};
+use super::{
+    login_info::LoginInfoScreen,
+    Screen,
+};
 use crate::utils::user_config::UserConfig;
 use cursive::{
-    traits::{Nameable, Resizable},
+    traits::{
+        Nameable,
+        Resizable,
+    },
     view::Margins,
-    views::{Button, LinearLayout, PaddedView, Panel, ScrollView, TextView},
+    views::{
+        Button,
+        LinearLayout,
+        PaddedView,
+        Panel,
+        ScrollView,
+        TextView,
+    },
 };
 
 /// Lists all existing entries.
@@ -15,12 +28,7 @@ impl Screen for ListLoginsScreen {
 
         // If anyone is seeing this, please send help. I can't take this anymore.
         let view = Panel::new(PaddedView::new(
-            Margins {
-                left: 0,
-                top: 1,
-                right: 0,
-                bottom: 2,
-            },
+            Margins { left: 0, top: 1, right: 0, bottom: 2 },
             ScrollView::new(
                 LinearLayout::new(cursive::direction::Orientation::Vertical).with_name("logins"),
             ),
@@ -31,7 +39,6 @@ impl Screen for ListLoginsScreen {
         // Must be added to the view tree before the line below runs.
         cursive.add_layer(view);
 
-        // This code sucks.
         cursive.call_on_name("logins", move |q: &mut LinearLayout| {
             if !cfg.logins.is_empty() {
                 cfg.logins.iter().for_each(|l| {

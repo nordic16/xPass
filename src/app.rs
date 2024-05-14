@@ -1,9 +1,14 @@
 use crate::{
     cli::{
-        create_login::CreateLoginScreen, generate_password::GeneratePasswordScreen,
-        list_logins::ListLoginsScreen, Screen,
+        create_login::CreateLoginScreen,
+        generate_password::GeneratePasswordScreen,
+        list_logins::ListLoginsScreen,
+        Screen,
     },
-    utils::{construct_dialog, user_config::UserConfig},
+    utils::{
+        construct_dialog,
+        user_config::UserConfig,
+    },
     DEBUG,
 };
 use cursive::{
@@ -11,12 +16,29 @@ use cursive::{
     event::Key,
     theme::{
         Color,
-        PaletteColor::{Background, Primary, Shadow, View},
+        PaletteColor::{
+            Background,
+            Primary,
+            Shadow,
+            View,
+        },
         Theme,
     },
-    traits::{Nameable, Resizable},
-    views::{Button, EditView, LinearLayout, ListView, Panel, TextView, ViewRef},
-    Cursive, CursiveExt,
+    traits::{
+        Nameable,
+        Resizable,
+    },
+    views::{
+        Button,
+        EditView,
+        LinearLayout,
+        ListView,
+        Panel,
+        TextView,
+        ViewRef,
+    },
+    Cursive,
+    CursiveExt,
 };
 
 pub struct App {
@@ -135,10 +157,7 @@ impl App {
     fn draw_masterpassword_screen(cursive: &mut Cursive) {
         let content = ListView::new()
             .child("Password", EditView::new().secret().with_name("password"))
-            .child(
-                "Confirm Password",
-                EditView::new().secret().with_name("confirm_password"),
-            )
+            .child("Confirm Password", EditView::new().secret().with_name("confirm_password"))
             .min_width(35);
 
         // Closure that will be executed when the user presses ok.
@@ -149,17 +168,15 @@ impl App {
             if password.get_content() == c_password.get_content()
                 && !password.get_content().is_empty()
             {
-                x.add_layer(
-                    construct_dialog("Success!", TextView::new("Password set!")).button(
-                        "Ok",
-                        |x| {
-                            x.pop_layer();
-                            x.pop_layer();
+                x.add_layer(construct_dialog("Success!", TextView::new("Password set!")).button(
+                    "Ok",
+                    |x| {
+                        x.pop_layer();
+                        x.pop_layer();
 
-                            App::draw_main_menu(x);
-                        },
-                    ),
-                );
+                        App::draw_main_menu(x);
+                    },
+                ));
 
                 // Actually sets the password.
                 x.with_user_data(|cfg: &mut UserConfig| {

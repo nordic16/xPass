@@ -1,14 +1,30 @@
 use super::Screen;
-use crate::utils::{construct_dialog, crypto, login::Login, user_config::UserConfig};
+use crate::utils::{
+    construct_dialog,
+    crypto,
+    login::Login,
+    user_config::UserConfig,
+};
 use cursive::{
     traits::Nameable,
     views::{
-        Checkbox, Dialog, EditView, HideableView, LinearLayout, ListView, ResizedView, TextView,
+        Checkbox,
+        Dialog,
+        EditView,
+        HideableView,
+        LinearLayout,
+        ListView,
+        ResizedView,
+        TextView,
         ViewRef,
     },
     Cursive,
 };
-use rand::{self, thread_rng, Rng};
+use rand::{
+    self,
+    thread_rng,
+    Rng,
+};
 
 pub struct CreateLoginScreen;
 
@@ -42,12 +58,13 @@ impl Screen for CreateLoginScreen {
                                 */
 
                             let no_chars_ref: ViewRef<Checkbox> = x.find_name("no_schars").unwrap();
-                            let no_numbers_ref: ViewRef<Checkbox> = x.find_name("no_numbers").unwrap();
-                            
+                            let no_numbers_ref: ViewRef<Checkbox> =
+                                x.find_name("no_numbers").unwrap();
+
                             let password = crypto::gen_secure_password(
                                 thread_rng().gen_range(16..50),
                                 !no_chars_ref.is_checked(),
-                                               !no_numbers_ref.is_checked()
+                                !no_numbers_ref.is_checked(),
                             );
 
                             password_ref.set_content(&password);

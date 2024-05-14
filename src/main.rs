@@ -5,9 +5,8 @@ mod utils;
 #[cfg(test)]
 mod tests;
 
-use std::error::Error;
-
 use app::App;
+use std::error::Error;
 use utils::user_config::UserConfig;
 
 // disables password authentication

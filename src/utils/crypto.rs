@@ -1,7 +1,16 @@
-use magic_crypt::{new_magic_crypt, MagicCryptTrait};
-use rand::{rngs::OsRng, Rng};
+use magic_crypt::{
+    new_magic_crypt,
+    MagicCryptTrait,
+};
+use rand::{
+    rngs::OsRng,
+    Rng,
+};
 use scrypt::{
-    password_hash::{PasswordHasher, SaltString},
+    password_hash::{
+        PasswordHasher,
+        SaltString,
+    },
     Scrypt,
 };
 
@@ -62,17 +71,14 @@ pub fn decrypt(cipher: &str, key: &str) -> String {
 /// NOTE: THIS IS WAY TOO SLOW: TAKES MORE THAN 10 seconds.
 pub fn calculate_hash(password: &str) -> String {
     let salt = SaltString::generate(&mut OsRng);
-    Scrypt
-        .hash_password(password.as_bytes(), &salt)
-        .unwrap()
-        .to_string()
+    Scrypt.hash_password(password.as_bytes(), &salt).unwrap().to_string()
 }
 
 pub fn calculate_password_entropy(password: &str) -> f32 {
     let len = password.len() as f32;
     let pool = calculate_password_pool(password);
 
-    return len * (pool as f32).log2();
+    len * (pool as f32).log2()
 }
 
 /// This function probably sucks. Refactor it some day.
@@ -92,12 +98,9 @@ fn calculate_password_pool(password: &str) -> i32 {
     }
 
     // Bunch of special characters, i know...
-    if password
-        .chars()
-        .any(|f| matches!(f, '!'..='/' | ':'..='@' | '['..='`' | '{'..='~'))
-    {
+    if password.chars().any(|f| matches!(f, '!'..='/' | ':'..='@' | '['..='`' | '{'..='~')) {
         pool += 32;
     }
 
-    return pool;
+    pool
 }
